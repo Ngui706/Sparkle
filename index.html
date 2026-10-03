@@ -12,105 +12,876 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
   <style>
-    :root { --ink:#123232; --muted:#607473; --mint:#dff5ee; --teal:#0e847e; --dark:#0f3c3a; --yellow:#f5c84b; --cream:#fbfaf5; --white:#fff; --line:#dce9e4; --shadow:0 18px 50px rgba(15,60,58,.1);}
-    * { box-sizing:border-box; } html { scroll-behavior:smooth; } body { margin:0; color:var(--ink); background:var(--cream); font-family:'DM Sans',sans-serif; line-height:1.55; } a { color:inheri
-t; text-decoration:none; } p { margin:0; } h1,h2,h3 { margin:0; font-family:'Manrope',sans-serif; font-weight:700; } .container { width:min(1120px,calc(100% - 40px)); margin:auto; } .topbar { background:var(--dark); color:#d8eeea; font-size:.82rem; } .topbar .container { min-height:36px; display:flex; align-items:center; justify-content:space-between; gap:20px; } .topbar a { color:inherit; } header { position:sticky; top:0; z-index:10; background:rgba(251,250,245,.94); backdrop-filter:blur(12px); border-bottom:1px solid rgba(220,233,228,.8); } nav { min-height:76px; display:flex; align-items:center; justify-content:space-between; gap:20px; } .brand { color:var(--dark); font-size:1.1rem; font-weight:700; display:flex; align-items:center; gap:7px; } .brand-mark { font-size:1.4rem; } .navlinks { display:flex; gap:28px; list-style:none; margin:0; padding:0; } .navlinks a { color:var(--ink); font-weight:500; transition:color .2s; } .navlinks a:hover { color:var(--teal); } .menu { display:none; background:0; border:0; cursor:pointer; padding:0; color:var(--ink); font-size:1.4rem; } .button { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; padding:13px 20px; border-radius:9px; background:var(--teal); color:white; font-weight:700; font-size:.85rem; text-decoration:none; cursor:pointer; transition:all .2s; } .button:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(14,132,126,.28); } .hero { overflow:hidden; padding:84px 0 92px; background:linear-gradient(116deg,#e6f5ef 0%,#eaf8f1 48%,#fcf8e7 100%); position:relative; } .hero-grid { display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:60px; } .hero h1 { font-size:clamp(2.2rem,5vw,3.8rem); line-height:1.15; } .hero h1 em { font-style:normal; color:var(--teal); } .hero p { margin-top:20px; color:var(--muted); } .eyebrow { display:block; color:var(--teal); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; margin-bottom:16px; } .hero-cta { display:flex; gap:16px; margin-top:30px; flex-wrap:wrap; } .hero-photo { position:relative; min-height:465px; animation: slideInPhoto 0.8s ease-out 0.2s both; } @keyframes slideInPhoto { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } } .hero-photo img { width:88%; height:455px; object-fit:cover; border-radius:34px 34px 34px 5px; box-shadow:var(--shadow); animation: floatImage 4s ease-in-out infinite; } @keyframes floatImage { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } } .float-card { position:absolute; bottom:30px; left:20px; background:var(--white); padding:16px 20px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.1); } .float-card p { font-size:.85rem; color:var(--muted); margin-bottom:4px; } .float-card strong { color:var(--ink); display:block; font-size:1rem; } section { padding:94px 0; } .section-head { max-width:610px; margin-bottom:42px; } .section-head h2 { font-size:clamp(2rem,3.5vw,3.1rem); } .section-head p { margin:17px 0 0; color:var(--muted); } .section-head.center { margin-left:auto; margin-right:auto; text-align:center; } .ads { display:none; background:#fff7d8; } .ads.has-ads { display:block; } .ad-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; } .ad-card { overflow:hidden; display:flex; flex-direction:column; background:var(--white); border-radius:20px; box-shadow:var(--shadow); cursor:pointer; transition:all .3s; } .ad-card:hover { transform:translateY(-8px); box-shadow:0 20px 60px rgba(15,60,58,.15); } .ad-card img { width:100%; height:200px; object-fit:cover; animation: scaleImage 0.8s ease-out backwards; } .ad-card img:nth-child(1) { animation-delay: 0s; } .ad-card:nth-child(2) img { animation-delay: 0.1s; } .ad-card:nth-child(3) img { animation-delay: 0.2s; } @keyframes scaleImage { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } } .ad-content { padding:20px; flex-grow:1; display:flex; flex-direction:column; } .ad-content h3 { margin-bottom:8px; color:var(--ink); } .ad-content p { flex-grow:1; color:var(--muted); font-size:.9rem; margin-bottom:16px; } .ad-preview { position:fixed; inset:0; z-index:30; display:none; place-items:center; padding:20px; background:rgba(15,60,58,.72); } .ad-preview.open { display:grid; } .ad-preview-card { position:relative; background:var(--white); border-radius:24px; padding:0; overflow:hidden; max-width:600px; width:100%; max-height:90vh; } .ad-preview-close { position:absolute; top:20px; right:20px; z-index:1; width:40px; height:40px; display:grid; place-items:center; border-radius:999px; border:0; background:rgba(255,255,255,.9); cursor:pointer; color:var(--dark); } .ad-preview img { width:100%; height:auto; display:block; } .ad-preview-content { padding:24px; } .services { background:var(--white); } .service-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; } .service-card { padding:28px; border:1px solid var(--line); border-radius:18px; transition:all .3s; animation: slideUp 0.6s ease-out backwards; } .service-card:nth-child(1) { animation-delay: 0s; } .service-card:nth-child(2) { animation-delay: 0.1s; } .service-card:nth-child(3) { animation-delay: 0.2s; } @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } } .service-card:hover { border-color:var(--teal); box-shadow:0 8px 32px rgba(14,132,126,.12); transform:translateY(-4px); } .service-card h3 { color:var(--ink); margin-bottom:12px; } .service-card p { color:var(--muted); font-size:.9rem; } .split { display:grid; grid-template-columns:.92fr 1.08fr; align-items:center; gap:80px; } .about-photo { position:relative; } .about-photo img { width:100%; height:495px; object-fit:cover; border-radius:28px; box-shadow:var(--shadow); animation: fadeIn 0.8s ease-out; } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } .pricing { background:#edf7f2; } .price-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; align-items:stretch; } .price-card { position:relative; overflow:hidden; padding:0 28px 28px; background:var(--white); border-radius:18px; border:1px solid var(--line); display:flex; flex-direction:column; justify-content:center; transition:all .3s; animation: bounceIn 0.7s ease-out backwards; } .price-card:nth-child(1) { animation-delay: 0s; } .price-card:nth-child(2) { animation-delay: 0.1s; } .price-card:nth-child(3) { animation-delay: 0.2s; } .price-card:nth-child(4) { animation-delay: 0.3s; } @keyframes bounceIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } } .price-card:hover { transform:translateY(-8px); box-shadow:0 16px 48px rgba(14,132,126,.16); } .price-card h3 { color:var(--ink); font-size:1.1rem; margin:20px 0 8px; } .price-card p { color:var(--muted); font-size:.9rem; } .price-tag { font-size:1.8rem; color:var(--teal); font-weight:700; } .process { background:var(--dark); color:white; } .process .section-head p { color:#b9d5d0; } .process-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:25px; } .step-num { display:flex; align-items:center; justify-content:center; width:50px; height:50px; border-radius:50%; background:var(--yellow); color:var(--dark); font-weight:700; font-size:1.2rem; margin-bottom:16px; } .process-card { animation: rotateIn 0.8s ease-out backwards; } .process-card:nth-child(1) { animation-delay: 0s; } .process-card:nth-child(2) { animation-delay: 0.15s; } .process-card:nth-child(3) { animation-delay: 0.3s; } .process-card:nth-child(4) { animation-delay: 0.45s; } @keyframes rotateIn { from { opacity: 0; transform: rotateY(90deg); } to { opacity: 1; transform: rotateY(0); } } .booking { background:var(--yellow); } .booking-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:65px; align-items:start; } .booking h2 { font-size:clamp(2rem,3.4vw,3rem); } .booking-copy { color:var(--muted); } #pickup-form { display:grid; gap:14px; margin-top:24px; animation: formSlide 0.8s ease-out; } @keyframes formSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } #pickup-form input, #pickup-form select { width:100%; border:1px solid rgba(15,60,58,.15); border-radius:10px; padding:13px 16px; font-size:.95rem; font-family:inherit; background:rgba(255,255,255,.6); color:var(--ink); transition:all .2s; } #pickup-form input:focus, #pickup-form select:focus { outline:0; border-color:var(--teal); background:var(--white); box-shadow:0 0 0 4px rgba(14,132,126,.1); } #pickup-form label { display:block; margin-bottom:6px; font-weight:600; color:var(--ink); font-size:.9rem; } .form-group { display:grid; gap:6px; } #pickup-form button { margin-top:8px; } .location-options { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; } .location-btn { display:inline-flex; gap:6px; align-items:center; padding:10px 16px; border:1px solid rgba(15,60,58,.2); border-radius:8px; background:rgba(255,255,255,.5); color:var(--ink); font-size:.85rem; font-weight:600; cursor:pointer; transition:all .2s; } .location-btn:hover { background:var(--white); border-color:var(--teal); } #pin-status { display:block; margin-top:8px; font-size:.85rem; color:var(--teal); min-height:20px; } .faq-contact { display:grid; grid-template-columns:1fr 1fr; gap:75px; align-items:start; } .faq-list { display:grid; gap:10px; } details { padding:17px 0; border-bottom:1px solid var(--line); animation: expandIn 0.4s ease-out backwards; } details:nth-child(1) { animation-delay: 0s; } details:nth-child(2) { animation-delay: 0.1s; } details:nth-child(3) { animation-delay: 0.2s; } details:nth-child(4) { animation-delay: 0.3s; } @keyframes expandIn { from { opacity: 0; } to { opacity: 1; } } details[open] summary { color:var(--teal); font-weight:600; } summary { cursor:pointer; color:var(--ink); font-weight:500; } summary:hover { color:var(--teal); } details p { margin-top:12px; color:var(--muted); } .contact-info { display:grid; gap:20px; } .contact-info p { color:var(--muted); } .contact-info strong { color:var(--ink); } footer { padding:53px 0 24px; color:#b6d3ce; background:var(--dark); } .footer-main { display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:40px; padding-bottom:40px; } footer .brand { color:white; margin-bottom:12px; } footer p { font-size:.9rem; } footer a { color:inherit; transition:color .2s; } footer a:hover { color:white; } .footer-link { display:block; margin-bottom:10px; } .footer-divider { border-top:1px solid rgba(255,255,255,.1); margin:40px 0; } .footer-bottom { display:flex; justify-content:space-between; align-items:center; gap:20px; font-size:.85rem; } @media (max-width:850px) { .navlinks { display:none; position:absolute; top:76px; right:20px; left:20px; padding:20px; flex-direction:column; align-items:stretch; gap:15px; border:1px solid var(--line); background:var(--white); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.1); } .navlinks.open { display:flex; } .menu { display:block; } .hero-grid { grid-template-columns:1fr; } .service-grid { grid-template-columns:1fr; } .price-grid { grid-template-columns:repeat(2,1fr); } .process-grid { grid-template-columns:repeat(2,1fr); } .split { grid-template-columns:1fr; gap:40px; } .booking-grid { grid-template-columns:1fr; gap:40px; } .faq-contact { grid-template-columns:1fr; gap:50px; } .footer-main { grid-template-columns:repeat(2,1fr); } .footer-bottom { flex-direction:column; align-items:flex-start; } } @media (max-width:560px) { .container { width:min(100% - 30px,1120px); } .topbar .container { justify-content:center; } .topbar span { display:none; } h1 { font-size:2.7rem; } section { padding:60px 0; } .hero-cta { flex-direction:column; } .button { width:100%; } .price-grid { grid-template-columns:1fr; } .process-grid { grid-template-columns:1fr; } .footer-main { grid-template-columns:1fr; } }
+    :root {
+      --ink: #123232;
+      --muted: #607473;
+      --mint: #dff5ee;
+      --teal: #0e847e;
+      --dark: #0f3c3a;
+      --yellow: #f5c84b;
+      --cream: #fbfaf5;
+      --white: #fff;
+      --line: #dce9e4;
+      --shadow: 0 18px 50px rgba(15, 60, 58, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    p { margin: 0; }
+    h1, h2, h3 { margin: 0; font-family: 'Manrope', sans-serif; font-weight: 700; }
+    img { display: block; max-width: 100%; }
+    button, input, select { font: inherit; }
+
+    .container { width: min(1120px, calc(100% - 40px)); margin: auto; }
+
+    .topbar {
+      background: var(--dark);
+      color: #d8eeea;
+      font-size: 0.82rem;
+    }
+    .topbar .container {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .topbar a { color: inherit; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(251, 250, 245, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(220, 233, 228, 0.8);
+    }
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      color: var(--dark);
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .brand-mark { font-size: 1.4rem; }
+    .navlinks {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .navlinks a {
+      color: var(--ink);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .navlinks a:hover { color: var(--teal); }
+    .menu { display: none; background: transparent; border: 0; cursor: pointer; color: var(--ink); font-size: 1.4rem; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 9px;
+      background: var(--teal);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(14, 132, 126, 0.28);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 84px 0 92px;
+      background: linear-gradient(116deg, #e6f5ef 0%, #eaf8f1 48%, #fcf8e7 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 60px;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.08;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--teal);
+    }
+    .hero p {
+      margin-top: 20px;
+      color: var(--muted);
+    }
+    .eyebrow {
+      display: block;
+      color: var(--teal);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-photo {
+      position: relative;
+      min-height: 465px;
+      animation: slideInPhoto 0.8s ease-out 0.2s both;
+    }
+    @keyframes slideInPhoto {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .hero-photo img {
+      width: 88%;
+      height: 455px;
+      object-fit: cover;
+      border-radius: 34px 34px 34px 5px;
+      box-shadow: var(--shadow);
+      animation: floatImage 4s ease-in-out infinite;
+    }
+    @keyframes floatImage {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .float-card {
+      position: absolute;
+      bottom: 30px;
+      left: 20px;
+      background: var(--white);
+      padding: 16px 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .float-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+    .float-card strong { display: block; font-size: 1rem; }
+
+    section { padding: 94px 0; }
+    .section-head { max-width: 610px; margin-bottom: 42px; }
+    .section-head h2 { font-size: clamp(2rem, 3.5vw, 3.1rem); }
+    .section-head p { margin-top: 17px; color: var(--muted); }
+    .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+    .ads { display: none; background: #fff7d8; }
+    .ads.has-ads { display: block; }
+    .ad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .ad-card {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .ad-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(15,60,58,.15);
+    }
+    .ad-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      animation: scaleImage 0.8s ease-out backwards;
+    }
+    @keyframes scaleImage {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .ad-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .ad-content h3 { margin-bottom: 8px; }
+    .ad-content p {
+      flex-grow: 1;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .ad-preview {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(15,60,58,.72);
+    }
+    .ad-preview.open { display: grid; }
+    .ad-preview-card {
+      position: relative;
+      background: var(--white);
+      border-radius: 24px;
+      overflow: hidden;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+    }
+    .ad-preview-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 1;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255,255,255,.9);
+      cursor: pointer;
+      color: var(--dark);
+    }
+    .ad-preview img { width: 100%; display: block; }
+    .ad-preview-content { padding: 24px; }
+    .ad-preview-content h2 { margin-bottom: 12px; }
+    .ad-preview-content p { color: var(--muted); margin-bottom: 18px; }
+
+    .services { background: var(--white); }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .service-card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      transition: all 0.3s;
+      animation: slideUp 0.6s ease-out backwards;
+    }
+    .service-card:nth-child(1) { animation-delay: 0s; }
+    .service-card:nth-child(2) { animation-delay: 0.1s; }
+    .service-card:nth-child(3) { animation-delay: 0.2s; }
+    .service-card:nth-child(4) { animation-delay: 0.3s; }
+    .service-card:nth-child(5) { animation-delay: 0.4s; }
+    .service-card:nth-child(6) { animation-delay: 0.5s; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .service-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 8px 32px rgba(14,132,126,.12);
+      transform: translateY(-4px);
+    }
+    .service-card h3 { margin-bottom: 12px; }
+    .service-card p { color: var(--muted); font-size: 0.9rem; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      align-items: center;
+      gap: 80px;
+    }
+    .about-photo img {
+      width: 100%;
+      height: 495px;
+      object-fit: cover;
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .pricing { background: #edf7f2; }
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .price-card {
+      position: relative;
+      overflow: hidden;
+      padding: 0 28px 28px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.3s;
+      animation: bounceIn 0.7s ease-out backwards;
+    }
+    .price-card:nth-child(1) { animation-delay: 0s; }
+    .price-card:nth-child(2) { animation-delay: 0.1s; }
+    .price-card:nth-child(3) { animation-delay: 0.2s; }
+    .price-card:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes bounceIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .price-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(14,132,126,.16);
+    }
+    .price-card h3 { margin: 20px 0 8px; }
+    .price-card p { color: var(--muted); font-size: 0.9rem; }
+    .price-tag {
+      font-size: 1.8rem;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .process {
+      background: var(--dark);
+      color: white;
+    }
+    .process .section-head p { color: #b9d5d0; }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 25px;
+    }
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .process-card { animation: rotateIn 0.8s ease-out backwards; }
+    .process-card:nth-child(1) { animation-delay: 0s; }
+    .process-card:nth-child(2) { animation-delay: 0.15s; }
+    .process-card:nth-child(3) { animation-delay: 0.3s; }
+    .process-card:nth-child(4) { animation-delay: 0.45s; }
+    @keyframes rotateIn {
+      from { opacity: 0; transform: rotateY(90deg); }
+      to { opacity: 1; transform: rotateY(0); }
+    }
+
+    .booking { background: var(--yellow); }
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 65px;
+      align-items: start;
+    }
+    .booking h2 { font-size: clamp(2rem, 3.4vw, 3rem); }
+    .booking-copy { color: var(--muted); }
+    .booking .eyebrow { color: var(--dark); }
+
+    #pickup-form {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+      animation: formSlide 0.8s ease-out;
+    }
+    @keyframes formSlide {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #pickup-form input, #pickup-form select {
+      width: 100%;
+      border: 1px solid rgba(15,60,58,.15);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,.6);
+      color: var(--ink);
+      transition: all 0.2s;
+    }
+    #pickup-form input:focus, #pickup-form select:focus {
+      outline: 0;
+      border-color: var(--teal);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(14,132,126,.1);
+    }
+    #pickup-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 0.9rem;
+    }
+    .form-group { display: grid; gap: 6px; }
+    .location-options {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .location-btn {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 10px 16px;
+      border: 1px solid rgba(15,60,58,.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,.5);
+      color: var(--ink);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .location-btn:hover {
+      background: var(--white);
+      border-color: var(--teal);
+    }
+    #pin-status {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--teal);
+      min-height: 20px;
+    }
+
+    .faq-contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 75px;
+      align-items: start;
+    }
+    .faq-list { display: grid; gap: 10px; }
+    details {
+      padding: 17px 0;
+      border-bottom: 1px solid var(--line);
+      animation: expandIn 0.4s ease-out backwards;
+    }
+    details:nth-child(1) { animation-delay: 0s; }
+    details:nth-child(2) { animation-delay: 0.1s; }
+    details:nth-child(3) { animation-delay: 0.2s; }
+    details:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes expandIn { from { opacity: 0; } to { opacity: 1; } }
+    details[open] summary { color: var(--teal); font-weight: 600; }
+    summary { cursor: pointer; color: var(--ink); font-weight: 500; }
+    summary:hover { color: var(--teal); }
+    details p { margin-top: 12px; color: var(--muted); }
+    .contact-info { display: grid; gap: 20px; }
+    .contact-info p { color: var(--muted); }
+    .contact-info strong { color: var(--ink); }
+
+    footer {
+      padding: 53px 0 24px;
+      color: #b6d3ce;
+      background: var(--dark);
+    }
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+    footer .brand { color: white; margin-bottom: 12px; }
+    footer p { font-size: 0.9rem; }
+    footer a:hover { color: white; }
+    .footer-link {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .footer-divider {
+      border-top: 1px solid rgba(255,255,255,.1);
+      margin: 40px 0;
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 850px) {
+      .navlinks {
+        display: none;
+        position: absolute;
+        top: 76px;
+        right: 20px;
+        left: 20px;
+        padding: 20px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        border: 1px solid var(--line);
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.1);
+      }
+      .navlinks.open { display: flex; }
+      .menu { display: block; }
+      .hero-grid,
+      .split,
+      .booking-grid,
+      .faq-contact { grid-template-columns: 1fr; gap: 40px; }
+      .service-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .process-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .footer-main { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 560px) {
+      .container { width: min(100% - 30px, 1120px); }
+      .topbar .container { justify-content: center; }
+      .topbar span { display: none; }
+      h1 { font-size: 2.7rem; }
+      section { padding: 60px 0; }
+      .hero-cta { flex-direction: column; }
+      .button { width: 100%; }
+      .price-grid, .process-grid, .footer-main { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <div class="topbar"><div class="container"><span>Serving Karatina University and its environs with care.</span><a href="tel:+254714884592">Call or WhatsApp: 0714 884 592</a></div></div>
-  <header><div class="container"><nav><a class="brand" href="#home" aria-label="Sparkle Laundry home"><span class="brand-mark">✦</span> Sparkle Laundry</a><button class="menu" aria-label="Open menu">☰</button><ul class="navlinks"><li><a href="#services">Services</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#about">About</a></li><li><a href="#booking">Booking</a></li><li><a href="#faq">FAQ</a></li></ul></nav></div></header>
+
+  <header>
+    <div class="container">
+      <nav>
+        <a class="brand" href="#home" aria-label="Sparkle Laundry home"><span class="brand-mark">✦</span> Sparkle Laundry</a>
+        <button class="menu" aria-label="Open menu">☰</button>
+        <ul class="navlinks">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#booking">Booking</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
   <main>
-    <section class="hero" id="home"><div class="container hero-grid"><div><p class="eyebrow">Karatina University's fresh laundry partner</p><h1>Fresh clothes.<br /><em>More time.</em> For you.</h1><p>Your laundry sorted. Your time saved. Experience convenient, professional laundry care with pickup and delivery right to your hostel.</p><div class="hero-cta"><a href="#booking" class="button">Book now →</a><a href="#services" class="button" style="background:var(--mint);color:var(--dark);">Learn more</a></div></div><div class="hero-photo"><img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=85" alt="Laundry basket ready for collection"><div class="float-card"><p>Fresh laundry</p><strong>Same day service</strong></div></div></div></section>
-    <section class="ads" id="promotions"><div class="container"><div class="section-head"><p class="eyebrow">Sparkle offers</p><h2>Special offers for your next wash.</h2><p>Tap an offer to order directly on WhatsApp.</p></div><div id="ad-grid" class="ad-grid"></div></div></section>
-    <section class="services" id="services"><div class="container"><div class="section-head"><p class="eyebrow">What we do</p><h2>We make laundry day the easiest day.</h2><p>From everyday clothes to heavy duvets, we handle it all with care.</p></div><div class="service-grid"><div class="service-card"><h3>Student wash</h3><p>Affordable daily laundry care designed for students. Quick turnaround, professional results.</p></div><div class="service-card"><h3>Wash & fold</h3><p>Complete laundry service with folding included. Your clothes, perfectly fresh and organized.</p></div><div class="service-card"><h3>Dry cleaning</h3><p>Premium care for delicate fabrics and formal wear. We treat your clothes like our own.</p></div><div class="service-card"><h3>Light duvet</h3><p>Gentle cleaning for light duvets. Fresh, fluffy, and ready to snuggle.</p></div><div class="service-card"><h3>Heavy duvet</h3><p>Industrial-strength care for heavy duvets and bedding. Sanitized and perfectly clean.</p></div><div class="service-card"><h3>Pickup & delivery</h3><p>We come to you. Schedule a pickup and we'll deliver your fresh laundry to your door.</p></div></div></div></section>
-    <section id="about"><div class="container split"><div class="about-photo"><img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=85" alt="Laundry business at work"></div><div><p class="eyebrow">Why choose us</p><h2>Quality care. Fair pricing. Real convenience.</h2><p>We're not just another laundry service. We're built for Karatina students, with pickup from your hostel and delivery to your door. No hidden fees. No surprises. Just fresh, clean clothes when you need them.</p><p style="margin-top:20px;">Our team uses professional-grade equipment and eco-friendly detergents to ensure your clothes stay looking great, wash after wash.</p></div></div></section>
-    <section class="pricing" id="pricing"><div class="container"><div class="section-head center"><p class="eyebrow">Simple pricing</p><h2>Fresh care for every fabric.</h2><p>Clear prices in Kenyan Shillings. No surprises, no hidden fees.</p></div><div class="price-grid"><div class="price-card"><div class="price-tag">100</div><h3>Student wash</h3><p>KSh per kg</p></div><div class="price-card"><div class="price-tag">100</div><h3>Wash & fold</h3><p>KSh per kg</p></div><div class="price-card"><div class="price-tag">•••</div><h3>Dry cleaning</h3><p>Price confirmed after inspection</p></div><div class="price-card"><div class="price-tag">250</div><h3>Light duvet</h3><p>KSh per duvet</p></div></div></div></section>
-    <section class="process"><div class="container"><div class="section-head"><p class="eyebrow">How it works</p><h2>Four easy steps to a fresher week.</h2><p>No queues, no guesswork — just book, and we handle the rest.</p></div><div class="process-grid"><div class="process-card"><div class="step-num">1</div><h3>Book</h3><p>Schedule your pickup right here on our website or WhatsApp.</p></div><div class="process-card"><div class="step-num">2</div><h3>Drop off</h3><p>Leave your laundry in a bag outside your hostel at your chosen time.</p></div><div class="process-card"><div class="step-num">3</div><h3>We wash</h3><p>We professionally clean and fold your clothes with care.</p></div><div class="process-card"><div class="step-num">4</div><h3>Collect</h3><p>We deliver fresh laundry to your door. Done!</p></div></div></div></section>
-    <section class="booking" id="booking"><div class="container booking-grid"><div><p class="eyebrow">Ready when you are</p><h2>Let's get your laundry sorted.</h2><p class="booking-copy">Complete the form below to book your laundry service. We'll confirm your pickup time and send you all the details via WhatsApp.</p></div><div><form id="pickup-form">
-      <div class="form-group">
-        <label for="name">Your name *</label>
-        <input type="text" id="name" name="name" placeholder="e.g., John Doe" required>
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Phone number *</label>
-        <input type="tel" id="phone" name="phone" placeholder="e.g., 0714 884 592" required>
-      </div>
-
-      <div class="form-group">
-        <label for="address">Hostel or location *</label>
-        <input type="text" id="address" name="address" placeholder="e.g., Kenyatta Hall or North Campus" required>
-      </div>
-
-      <div class="form-group">
-        <label>Share your location (optional)</label>
-        <div class="location-options">
-          <button type="button" class="location-btn" id="pin-location">📍 Pin location</button>
-          <button type="button" class="location-btn" id="share-live-location">🗺️ Share live location</button>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Karatina University's fresh laundry partner</p>
+          <h1>Fresh clothes.<br /><em>More time.</em> For you.</h1>
+          <p>Your laundry sorted. Your time saved. Experience convenient, professional laundry care with pickup and delivery right to your hostel.</p>
+          <div class="hero-cta">
+            <a href="#booking" class="button">Book now →</a>
+            <a href="#services" class="button" style="background:var(--mint);color:var(--dark);">Learn more</a>
+          </div>
         </div>
-        <span id="pin-status"></span>
+        <div class="hero-photo">
+          <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=900&q=80" alt="Laundry basket ready for collection" />
+          <div class="float-card">
+            <p>Fresh laundry</p>
+            <strong>Same day service</strong>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label for="service">Service type *</label>
-        <select id="service" name="service" required>
-          <option value="">Select a service</option>
-          <option value="Student wash">Student wash</option>
-          <option value="Wash & fold">Wash & fold</option>
-          <option value="Dry cleaning">Dry cleaning</option>
-          <option value="Light duvet">Light duvet</option>
-          <option value="Heavy duvet">Heavy duvet</option>
-        </select>
+    <section class="ads" id="promotions">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Sparkle offers</p>
+          <h2>Special offers for your next wash.</h2>
+          <p>Tap an offer to order directly on WhatsApp.</p>
+        </div>
+        <div id="ad-grid" class="ad-grid"></div>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label for="item_count">Number of items (kg or count) *</label>
-        <input type="text" id="item_count" name="item_count" placeholder="e.g., 5 kg or 20 items" required>
+    <section class="services" id="services">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">What we do</p>
+          <h2>We make laundry day the easiest day.</h2>
+          <p>From everyday clothes to heavy duvets, we handle it all with care.</p>
+        </div>
+        <div class="service-grid">
+          <div class="service-card"><h3>Student wash</h3><p>Affordable daily laundry care designed for students. Quick turnaround, professional results.</p></div>
+          <div class="service-card"><h3>Wash & fold</h3><p>Complete laundry service with folding included. Your clothes, perfectly fresh and organized.</p></div>
+          <div class="service-card"><h3>Dry cleaning</h3><p>Premium care for delicate fabrics and formal wear. We treat your clothes like our own.</p></div>
+          <div class="service-card"><h3>Light duvet</h3><p>Gentle cleaning for light duvets. Fresh, fluffy, and ready to snuggle.</p></div>
+          <div class="service-card"><h3>Heavy duvet</h3><p>Industrial-strength care for heavy duvets and bedding. Sanitized and perfectly clean.</p></div>
+          <div class="service-card"><h3>Pickup & delivery</h3><p>We come to you. Schedule a pickup and we'll deliver your fresh laundry to your door.</p></div>
+        </div>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label for="date">Preferred pickup date *</label>
-        <input type="date" id="date" name="date" required>
+    <section id="about">
+      <div class="container split">
+        <div class="about-photo">
+          <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1000&q=80" alt="Laundry business at work" />
+        </div>
+        <div>
+          <p class="eyebrow">Why choose us</p>
+          <h2>Quality care. Fair pricing. Real convenience.</h2>
+          <p>We're not just another laundry service. We're built for Karatina students, with pickup from your hostel and delivery to your door. No hidden fees. No surprises. Just fresh, clean clothes when you need them.</p>
+          <p style="margin-top:20px;">Our team uses professional-grade equipment and eco-friendly detergents to ensure your clothes stay looking great, wash after wash.</p>
+        </div>
       </div>
+    </section>
 
-      <button type="submit" class="button" style="width:100%; margin-top:16px;">Confirm booking →</button>
-    </form></div></div></section>
-    <section id="faq"><div class="container faq-contact"><div><div class="section-head"><p class="eyebrow">Good to know</p><h2>Questions, answered.</h2></div><div class="faq-list"><details open><summary>What's included in the booking form?</summary><p>We need your name, phone number, location, service type, item count, and preferred pickup date. This helps our staff plan their route and confirm your booking via WhatsApp.</p></details><details><summary>Can I track my laundry?</summary><p>Yes! We'll update you on WhatsApp when we pick up your laundry and again when it's ready for delivery.</p></details><details><summary>Do you offer rush service?</summary><p>In most cases, yes. Contact us via WhatsApp and we'll see what we can arrange.</p></details><details><summary>What if I need a custom service?</summary><p>Just get in touch on WhatsApp with your specific needs, and we'll provide a custom quote.</p></details></div></div><div><div class="section-head"><p class="eyebrow">Get in touch</p><h2>We're here to help.</h2></div><div class="contact-info"><p><strong>WhatsApp & Phone:</strong><br><a href="tel:+254714884592">0714 884 592</a></p><p><strong>Service area:</strong><br>Karatina University and environs</p><p><strong>Hours:</strong><br>Monday – Sunday, 7 AM – 6 PM</p><p><strong>Questions?</strong><br>Message us anytime on WhatsApp!</p></div></div></div></section>
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">Simple pricing</p>
+          <h2>Fresh care for every fabric.</h2>
+          <p>Clear prices in Kenyan Shillings. No surprises, no hidden fees.</p>
+        </div>
+        <div class="price-grid">
+          <div class="price-card"><div class="price-tag">100</div><h3>Student wash</h3><p>KSh per kg</p></div>
+          <div class="price-card"><div class="price-tag">100</div><h3>Wash & fold</h3><p>KSh per kg</p></div>
+          <div class="price-card"><div class="price-tag">•••</div><h3>Dry cleaning</h3><p>Price confirmed after inspection</p></div>
+          <div class="price-card"><div class="price-tag">250</div><h3>Light duvet</h3><p>KSh per duvet</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2>Four easy steps to a fresher week.</h2>
+          <p>No queues, no guesswork — just book, and we handle the rest.</p>
+        </div>
+        <div class="process-grid">
+          <div class="process-card"><div class="step-num">1</div><h3>Book</h3><p>Schedule your pickup right here on our website or WhatsApp.</p></div>
+          <div class="process-card"><div class="step-num">2</div><h3>Drop off</h3><p>Leave your laundry in a bag outside your hostel at your chosen time.</p></div>
+          <div class="process-card"><div class="step-num">3</div><h3>We wash</h3><p>We professionally clean and fold your clothes with care.</p></div>
+          <div class="process-card"><div class="step-num">4</div><h3>Collect</h3><p>We deliver fresh laundry to your door. Done!</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking" id="booking">
+      <div class="container booking-grid">
+        <div>
+          <p class="eyebrow">Ready when you are</p>
+          <h2>Let's get your laundry sorted.</h2>
+          <p class="booking-copy">Complete the form below to book your laundry service. We'll confirm your pickup time and send you all the details via WhatsApp.</p>
+        </div>
+        <div>
+          <form id="pickup-form">
+            <div class="form-group">
+              <label for="name">Your name *</label>
+              <input type="text" id="name" name="name" placeholder="e.g., John Doe" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone number *</label>
+              <input type="tel" id="phone" name="phone" placeholder="e.g., 0714 884 592" required>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Hostel or location *</label>
+              <input type="text" id="address" name="address" placeholder="e.g., Kenyatta Hall or North Campus" required>
+            </div>
+
+            <div class="form-group">
+              <label>Share your location (optional)</label>
+              <div class="location-options">
+                <button type="button" class="location-btn" id="pin-location">📍 Pin location</button>
+                <button type="button" class="location-btn" id="share-live-location">🗺️ Share live location</button>
+              </div>
+              <span id="pin-status"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="service">Service type *</label>
+              <select id="service" name="service" required>
+                <option value="">Select a service</option>
+                <option value="Student wash">Student wash</option>
+                <option value="Wash & fold">Wash & fold</option>
+                <option value="Dry cleaning">Dry cleaning</option>
+                <option value="Light duvet">Light duvet</option>
+                <option value="Heavy duvet">Heavy duvet</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="item_count">Number of items (kg or count) *</label>
+              <input type="text" id="item_count" name="item_count" placeholder="e.g., 5 kg or 20 items" required>
+            </div>
+
+            <div class="form-group">
+              <label for="date">Preferred pickup date *</label>
+              <input type="date" id="date" name="date" required>
+            </div>
+
+            <button type="submit" class="button" style="width:100%; margin-top:16px;">Confirm booking →</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container faq-contact">
+        <div>
+          <div class="section-head">
+            <p class="eyebrow">Good to know</p>
+            <h2>Questions, answered.</h2>
+          </div>
+          <div class="faq-list">
+            <details open>
+              <summary>What's included in the booking form?</summary>
+              <p>We need your name, phone number, location, service type, item count, and preferred pickup date. This helps our staff plan their route and confirm your booking via WhatsApp.</p>
+            </details>
+            <details>
+              <summary>Can I track my laundry?</summary>
+              <p>Yes! We'll update you on WhatsApp when we pick up your laundry and again when it's ready for delivery.</p>
+            </details>
+            <details>
+              <summary>Do you offer rush service?</summary>
+              <p>In most cases, yes. Contact us via WhatsApp and we'll see what we can arrange.</p>
+            </details>
+            <details>
+              <summary>What if I need a custom service?</summary>
+              <p>Just get in touch on WhatsApp with your specific needs, and we'll provide a custom quote.</p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-head">
+            <p class="eyebrow">Get in touch</p>
+            <h2>We're here to help.</h2>
+          </div>
+          <div class="contact-info">
+            <p><strong>WhatsApp & Phone:</strong><br><a href="tel:+254714884592">0714 884 592</a></p>
+            <p><strong>Service area:</strong><br>Karatina University and environs</p>
+            <p><strong>Hours:</strong><br>Monday – Sunday, 7 AM – 6 PM</p>
+            <p><strong>Questions?</strong><br>Message us anytime on WhatsApp!</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer><div class="container"><div class="footer-main"><div><a class="brand" href="#home"><span class="brand-mark">✦</span> Sparkle Laundry</a><p>Professional laundry care for Karatina University. Fresh clothes. More time.</p></div><div><p style="margin-bottom:16px;font-weight:600;color:white;">Services</p><a href="#services" class="footer-link">Student wash</a><a href="#services" class="footer-link">Wash & fold</a><a href="#services" class="footer-link">Dry cleaning</a></div><div><p style="margin-bottom:16px;font-weight:600;color:white;">Quick links</p><a href="#pricing" class="footer-link">Pricing</a><a href="#booking" class="footer-link">Book now</a><a href="#faq" class="footer-link">FAQ</a></div><div><p style="margin-bottom:16px;font-weight:600;color:white;">Contact</p><a href="tel:+254714884592" class="footer-link">📞 0714 884 592</a><a href="https://wa.me/254714884592" class="footer-link" target="_blank">💬 WhatsApp</a></div></div><div class="footer-divider"></div><div class="footer-bottom"><p>© 2025 Sparkle Laundry. All rights reserved.</p><p>Made with ✦ for Karatina University</p></div></div></footer>
-  <div class="ad-preview" id="ad-preview" role="dialog" aria-modal="true" aria-labelledby="ad-preview-title"><div class="ad-preview-card"><button class="ad-preview-close" id="ad-preview-close" aria-label="Close ad preview"></button><img id="ad-preview-image" src="" alt=""><div class="ad-preview-content"><h2 id="ad-preview-title"></h2><p id="ad-preview-description"></p><a id="ad-preview-cta" href="#" class="button" target="_blank" rel="noreferrer"></a></div></div></div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-main">
+        <div>
+          <a class="brand" href="#home"><span class="brand-mark">✦</span> Sparkle Laundry</a>
+          <p>Professional laundry care for Karatina University. Fresh clothes. More time.</p>
+        </div>
+        <div>
+          <p style="margin-bottom:16px;font-weight:600;color:white;">Services</p>
+          <a href="#services" class="footer-link">Student wash</a>
+          <a href="#services" class="footer-link">Wash & fold</a>
+          <a href="#services" class="footer-link">Dry cleaning</a>
+        </div>
+        <div>
+          <p style="margin-bottom:16px;font-weight:600;color:white;">Quick links</p>
+          <a href="#pricing" class="footer-link">Pricing</a>
+          <a href="#booking" class="footer-link">Book now</a>
+          <a href="#faq" class="footer-link">FAQ</a>
+        </div>
+        <div>
+          <p style="margin-bottom:16px;font-weight:600;color:white;">Contact</p>
+          <a href="tel:+254714884592" class="footer-link">📞 0714 884 592</a>
+          <a href="https://wa.me/254714884592" class="footer-link" target="_blank">💬 WhatsApp</a>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <p>© 2025 Sparkle Laundry. All rights reserved.</p>
+        <p>Made with ✦ for Karatina University</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="ad-preview" id="ad-preview" role="dialog" aria-modal="true" aria-labelledby="ad-preview-title">
+    <div class="ad-preview-card">
+      <button class="ad-preview-close" id="ad-preview-close" aria-label="Close ad preview">×</button>
+      <img id="ad-preview-image" src="" alt="" />
+      <div class="ad-preview-content">
+        <h2 id="ad-preview-title"></h2>
+        <p id="ad-preview-description"></p>
+        <a id="ad-preview-cta" href="#" class="button" target="_blank" rel="noreferrer">Order on WhatsApp →</a>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Replace these placeholders during deployment. The browser only receives the public anon key.
     window.SPARKLE_CONFIG = { url: 'https://ddvzobvioyulvchokvwo.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnpvYnZpb3l1bHZjaG9rdndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU0MzI2MTgsImV4cCI6MjA0MTAwODYxOH0.X-xxQfLbOxQ0Hl_88Y2oxSzAHUkG7n7nU4OI5fpDfn4' };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const menu = document.querySelector('.menu'), navlinks = document.querySelector('.navlinks');
-    menu.addEventListener('click', () => { const open = navlinks.classList.toggle('open'); menu.setAttribute('aria-expanded', open); });
+    const menu = document.querySelector('.menu');
+    const navlinks = document.querySelector('.navlinks');
+    menu.addEventListener('click', () => {
+      const open = navlinks.classList.toggle('open');
+      menu.setAttribute('aria-expanded', open);
+    });
     document.querySelectorAll('.navlinks a').forEach(link => link.addEventListener('click', () => navlinks.classList.remove('open')));
 
     const config = window.SPARKLE_CONFIG || {};
     const dbClient = window.supabase && config.url && config.anonKey ? window.supabase.createClient(config.url, config.anonKey) : null;
-    const basketImage = document.querySelector('img[alt="Laundry basket ready for collection"]');
-    if (basketImage) basketImage.src = 'https://plus.unsplash.com/premium_photo-1679503073951-c9b5eda7ee29?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bGF1bmRyeXxlbnwwfHwwfHx8MA%3D%3D';
-    const heavyDuvetImage = document.querySelector('img[alt="Clean heavy duvet"]');
-    if (heavyDuvetImage) heavyDuvetImage.src = 'https://plus.unsplash.com/premium_photo-1763466939637-9e2668f0966b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGxhdW5kcnl8ZW58MHx8MHx8fDA%3D';
-    const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+
+    const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+
     async function loadAds() {
       if (!dbClient) return;
       const { data } = await dbClient.from('ads').select('*').eq('active', true).order('created_at', { ascending: false });
-      if (!data?.length) return;
+      if (!data || !data.length) return;
       document.querySelector('#promotions').classList.add('has-ads');
       document.querySelector('#ad-grid').innerHTML = data.map((ad, index) => {
         const message = ad.whatsapp_message || `Hello Sparkle Laundry, I would like to order: ${ad.title}`;
-        const link = `https://wa.me/254795846971?text=${encodeURIComponent(message)}`;
-        return `<article class="ad-card" style="animation-delay: ${index * 0.1}s;">${ad.image_url ? `<img src="${escapeHtml(ad.image_url)}" alt="${escapeHtml(ad.title)}">` : ''}<div class="ad-content"><h3>${escapeHtml(ad.title)}</h3><p>${escapeHtml(ad.description || '')}</p><button class="open-ad" data-ad='${JSON.stringify(ad)}' style="align-self:flex-start; background:var(--teal); color:white; border:0; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; font-size:.85rem;">View offer →</button></div></article>`;
+        return `<article class="ad-card" style="animation-delay: ${index * 0.1}s;">${ad.image_url ? `<img src="${escapeHtml(ad.image_url)}" alt="${escapeHtml(ad.title)}">` : ''}<div class="ad-content"><h3>${escapeHtml(ad.title)}</h3><p>${escapeHtml(ad.description || '')}</p><button class="open-ad" data-ad='${JSON.stringify(ad)}' style="align-self:flex-start;background:var(--teal);color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">View offer →</button></div></article>`;
       }).join('');
       document.querySelectorAll('.open-ad').forEach(button => button.addEventListener('click', () => openAdPreview(JSON.parse(button.dataset.ad))));
     }
-    function openAdPreview(ad) { document.querySelector('#ad-preview-image').src = ad.image_url || ''; document.querySelector('#ad-preview-image').alt = ad.title; document.querySelector('#ad-preview-title').textContent = ad.title; document.querySelector('#ad-preview-description').textContent = ad.description || ''; const message = ad.whatsapp_message || `Hello Sparkle Laundry, I would like to order: ${ad.title}`; document.querySelector('#ad-preview-cta').href = `https://wa.me/254795846971?text=${encodeURIComponent(message)}`; document.querySelector('#ad-preview-cta').textContent = 'Order on WhatsApp →'; document.querySelector('#ad-preview').classList.add('open'); }
-    function closeAdPreview() { document.querySelector('#ad-preview').classList.remove('open'); document.body.style.overflow = ''; }
+
+    function openAdPreview(ad) {
+      const previewImage = document.querySelector('#ad-preview-image');
+      const title = document.querySelector('#ad-preview-title');
+      const description = document.querySelector('#ad-preview-description');
+      const cta = document.querySelector('#ad-preview-cta');
+      previewImage.src = ad.image_url || '';
+      previewImage.alt = ad.title || 'Offer image';
+      title.textContent = ad.title || 'Offer';
+      description.textContent = ad.description || '';
+      const message = ad.whatsapp_message || `Hello Sparkle Laundry, I would like to order: ${ad.title}`;
+      cta.href = `https://wa.me/254795846971?text=${encodeURIComponent(message)}`;
+      document.querySelector('#ad-preview').classList.add('open');
+    }
+
+    function closeAdPreview() {
+      document.querySelector('#ad-preview').classList.remove('open');
+    }
     document.querySelector('#ad-preview-close').addEventListener('click', closeAdPreview);
     document.querySelector('#ad-preview').addEventListener('click', event => { if (event.target.id === 'ad-preview') closeAdPreview(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape') closeAdPreview(); });
@@ -118,29 +889,59 @@ t; text-decoration:none; } p { margin:0; } h1,h2,h3 { margin:0; font-family:'Man
 
     const bookingForm = document.querySelector('#pickup-form');
     let pinnedLocation = '';
-    const servicePrices = { 'Student wash': 'KSh 100 / kg', 'Wash & fold': 'KSh 100 / kg', 'Dry cleaning': 'Price confirmed after inspection', 'Light duvet': 'KSh 250 / duvet', 'Heavy duvet': 'KSh 300 / duvet' };
-    document.querySelector('#pin-location').addEventListener('click', (e) => {
-      e.preventDefault();
+    const servicePrices = {
+      'Student wash': 'KSh 100 / kg',
+      'Wash & fold': 'KSh 100 / kg',
+      'Dry cleaning': 'Price confirmed after inspection',
+      'Light duvet': 'KSh 250 / duvet',
+      'Heavy duvet': 'KSh 300 / duvet'
+    };
+
+    document.querySelector('#pin-location').addEventListener('click', (event) => {
+      event.preventDefault();
       const status = document.querySelector('#pin-status');
-      if (!navigator.geolocation) { status.textContent = 'Location pinning is not supported on this device.'; return; }
+      if (!navigator.geolocation) {
+        status.textContent = 'Location pinning is not supported on this device.';
+        return;
+      }
       status.textContent = 'Finding your location…';
       navigator.geolocation.getCurrentPosition(position => {
         pinnedLocation = `GPS pin: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
         status.textContent = '✓ Location pinned. Staff can use this to find you.';
-      }, () => { status.textContent = 'Could not access your location. Please enter your hostel or landmark.'; }, { enableHighAccuracy: true, timeout: 10000 });
+      }, () => {
+        status.textContent = 'Could not access your location. Please enter your hostel or landmark.';
+      }, { enableHighAccuracy: true, timeout: 10000 });
     });
-    document.querySelector('#share-live-location').addEventListener('click', (e) => {
-      e.preventDefault();
+
+    document.querySelector('#share-live-location').addEventListener('click', (event) => {
+      event.preventDefault();
       const status = document.querySelector('#pin-status');
-      const whatsappWindow = window.open('https://wa.me/254714884592?text=Hello%20Sparkle%20Laundry%2C%20I%20am%20ready%20to%20share%20my%20live%20location%20for%20pickup.%20I%20will%20use%20WhatsApp%20to%20share%20it.', '_blank', 'noopener,noreferrer');
+      window.open('https://wa.me/254714884592?text=Hello%20Sparkle%20Laundry%2C%20I%20am%20ready%20to%20share%20my%20live%20location%20for%20pickup.%20I%20will%20use%20WhatsApp%20to%20share%20it.', '_blank', 'noopener,noreferrer');
       status.textContent = 'WhatsApp opened. Tap attachment → Location → Share live location.';
     });
+
     bookingForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const button = bookingForm.querySelector('button');
       const originalLabel = button.innerHTML;
       button.disabled = true;
       button.innerHTML = 'Sending request…';
+
+      const form = new FormData(bookingForm);
+      const name = (form.get('name') || '').toString().trim();
+      const phone = (form.get('phone') || '').toString().trim();
+      const address = (form.get('address') || '').toString().trim();
+      const service = (form.get('service') || '').toString();
+      const itemCount = (form.get('item_count') || '').toString().trim();
+      const date = (form.get('date') || '').toString();
+
+      if (!name || !phone || !address || !service || !itemCount || !date) {
+        button.disabled = false;
+        button.innerHTML = originalLabel;
+        alert('Please complete all required fields before submitting your booking.');
+        return;
+      }
+
       const config = window.SPARKLE_CONFIG || {};
       if (!window.supabase || !config.url || !config.anonKey || config.url.includes('YOUR_PROJECT') || config.anonKey.includes('YOUR_SUPABASE')) {
         button.disabled = false;
@@ -148,27 +949,33 @@ t; text-decoration:none; } p { margin:0; } h1,h2,h3 { margin:0; font-family:'Man
         alert(!window.supabase ? 'Supabase could not load. Check your internet connection and reload the page.' : 'Supabase still needs to be configured. See SETUP.md.');
         return;
       }
-      const form = new FormData(bookingForm);
+
       const { error } = await dbClient.from('bookings').insert({
-        customer_name: form.get('name').trim(),
-        location: `${form.get('address').trim()}${pinnedLocation ? ` (${pinnedLocation})` : ''}`,
-        phone: form.get('phone').trim(),
-        service_name: form.get('service'),
-        preferred_date: form.get('date') || null,
-        item_count: form.get('item_count').trim(),
+        customer_name: name,
+        location: `${address}${pinnedLocation ? ` (${pinnedLocation})` : ''}`,
+        phone,
+        service_name: service,
+        preferred_date: date,
+        item_count: itemCount,
+        status: 'pending'
       });
+
       if (error) {
         button.disabled = false;
         button.innerHTML = originalLabel;
         alert(`We could not submit your booking: ${error.message}`);
         return;
       }
-      const selectedService = form.get('service');
+
+      const selectedService = service;
       const servicePrice = servicePrices[selectedService] || 'Price confirmed after booking';
-      const message = `*NEW SPARKLE LAUNDRY BOOKING*%0A%0A*Customer:* ${encodeURIComponent(form.get('name'))}%0A*Phone:* ${encodeURIComponent(form.get('phone'))}%0A*Location:* ${encodeURIComponent(form.get('address'))}%0A*Service:* ${encodeURIComponent(selectedService)}%0A*Items:* ${encodeURIComponent(form.get('item_count'))}%0A*Pickup Date:* ${encodeURIComponent(form.get('date'))}%0A*Price:* ${encodeURIComponent(servicePrice)}`;
+      const message = `*NEW SPARKLE LAUNDRY BOOKING*%0A%0A*Customer:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Location:* ${encodeURIComponent(address)}%0A*Service:* ${encodeURIComponent(selectedService)}%0A*Items:* ${encodeURIComponent(itemCount)}%0A*Pickup Date:* ${encodeURIComponent(date)}%0A*Price:* ${encodeURIComponent(servicePrice)}`;
       const whatsapp = `https://wa.me/254714884592?text=${message}`;
+
       bookingForm.reset();
       pinnedLocation = '';
+      document.querySelector('#pin-status').textContent = '';
+
       window.open(whatsapp, '_blank', 'noopener,noreferrer');
       const whatsappLink = document.createElement('a');
       whatsappLink.className = 'button';
@@ -180,7 +987,10 @@ t; text-decoration:none; } p { margin:0; } h1,h2,h3 { margin:0; font-family:'Man
       whatsappLink.style.width = '100%';
       button.replaceWith(whatsappLink);
     });
-    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
   </script>
 </body>
 </html>
