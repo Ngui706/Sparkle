@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sparkle Laundry | Staff portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SPARKLE_CONFIG = { url: 'https://ddvzobvioyulvchokvwo.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnpvYnZpb3l1bHZjaG9rdndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NDU4MTAsImV4cCI6MjEwNDUyMTgxMH0.gDGdXSmN8NKJ3Rx0MAuAEFizhtlUtGXn4kK0glesxNU' };
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -668,11 +671,7 @@
     }
     createBackgroundAnimation();
 
-    if (!window.SPARKLE_CONFIG || !window.SPARKLE_CONFIG.url || !window.SPARKLE_CONFIG.anonKey) {
-      throw new Error('Missing Supabase config. Copy the window.SPARKLE_CONFIG block from index.html before this page loads.');
-    }
-
-    const CONFIG = window.SPARKLE_CONFIG;
+    const CONFIG = window.SPARKLE_CONFIG || {};
     const db = supabase.createClient(CONFIG.url, CONFIG.anonKey);
     const $ = (id) => document.getElementById(id);
     const safe = (value = '') => String(value).replace(/[&<>\"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
