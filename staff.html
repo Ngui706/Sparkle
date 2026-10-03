@@ -6,7 +6,7 @@
   <title>Sparkle Laundry | Staff portal</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    window.SPARKLE_CONFIG = { url: 'https://ddvzobvioyulvchokvwo.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnpvYnZpb3l1bHZjaG9rdndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NDU4MTAsImV4cCI6MjEwNDUyMTgxMH0.gDGdXSmN8NKJ3Rx0MAuAEFizhtlUtGXn4kK0glesxNU' };
+    window.SPARKLE_CONFIG = { url: 'https://ddvzobvioyulvchokvwo.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnpvYnZpb3l1bHZjaG9rdndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU0MzI2MTgsImV4cCI6MjA0MTAwODYxOH0.X-xxQfLbOxQ0Hl_88Y2oxSzAHUkG7n7nU4OI5fpDfn4' };
   </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -411,6 +411,132 @@
       border: 1px solid rgba(15,23,42,0.08);
     }
 
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 40;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 23, 42, 0.75);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.open {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      color: #aaa;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .modal-close:hover {
+      color: #000;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #0f172a;
+      clear: both;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section label {
+      display: block;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .modal-section p {
+      color: #475569;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .modal-section select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(148,163,184,0.4);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #0f172a;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      justify-content: flex-end;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #60a5fa 0%, #8b5cf6 100%);
+      color: white;
+    }
+
+    .modal-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(91, 123, 255, 0.3);
+    }
+
+    .modal-btn-secondary {
+      background: rgba(15,23,42,0.08);
+      color: #0f172a;
+    }
+
+    .modal-btn-secondary:hover {
+      background: rgba(15,23,42,0.12);
+    }
+
     .ad-section {
       margin-top: 32px;
       background: rgba(255,255,255,0.88);
@@ -568,6 +694,14 @@
       .ad-item-actions button {
         width: 100%;
       }
+
+      .modal-content {
+        padding: 24px;
+      }
+
+      .modal-actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -631,6 +765,38 @@
     </div>
   </div>
 
+  <!-- Details Modal -->
+  <div id="details-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDetailsModal()">×</button>
+      <h2>Booking Details</h2>
+      <div id="details-content"></div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-secondary" onclick="closeDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Update Modal -->
+  <div id="status-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeStatusModal()">×</button>
+      <h2>Update Booking Status</h2>
+      <div class="modal-section">
+        <label>New Status</label>
+        <select id="status-select">
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-secondary" onclick="closeStatusModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="updateBookingStatus()">Update</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     function createBackgroundAnimation() {
       const bg = document.getElementById('bg-animation');
@@ -675,6 +841,8 @@
     const db = supabase.createClient(CONFIG.url, CONFIG.anonKey);
     const $ = (id) => document.getElementById(id);
     const safe = (value = '') => String(value).replace(/[&<>\"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    let currentBookingId = null;
 
     async function loadAds() {
       const { data, error } = await db.from('ads').select('*').order('created_at', { ascending: false });
@@ -767,7 +935,7 @@
       }
 
       $('bookings-list').innerHTML = (data || []).map(b => `
-        <div class="booking">
+        <div class="booking" data-id="${b.id}">
           <div class="booking-header">
             <h3>${safe(b.customer_name || 'Customer')}</h3>
             <span class="booking-status ${b.status || 'pending'}">${safe(b.status || 'pending')}</span>
@@ -791,11 +959,83 @@
             </div>
           </div>
           <div class="booking-actions">
-            <button class="btn btn-primary" type="button">View details</button>
-            <button class="btn btn-secondary" type="button">Update status</button>
+            <button class="btn btn-primary" type="button" onclick="viewBookingDetails(${b.id})">View details</button>
+            <button class="btn btn-secondary" type="button" onclick="openStatusModal(${b.id})">Update status</button>
           </div>
         </div>
       `).join('');
+      window.currentBookings = data || [];
+    }
+
+    function viewBookingDetails(bookingId) {
+      const booking = (window.currentBookings || []).find(b => b.id === bookingId);
+      if (!booking) return;
+
+      const detailsHtml = `
+        <div class="modal-section">
+          <label>Customer Name</label>
+          <p>${safe(booking.customer_name || '—')}</p>
+        </div>
+        <div class="modal-section">
+          <label>Phone</label>
+          <p>${safe(booking.phone || '—')}</p>
+        </div>
+        <div class="modal-section">
+          <label>Location</label>
+          <p>${safe(booking.location || '—')}</p>
+        </div>
+        <div class="modal-section">
+          <label>Service</label>
+          <p>${safe(booking.service_name || '—')}</p>
+        </div>
+        <div class="modal-section">
+          <label>Item Count</label>
+          <p>${safe(booking.item_count || '—')}</p>
+        </div>
+        <div class="modal-section">
+          <label>Pickup Date</label>
+          <p>${booking.booking_date ? new Date(booking.booking_date).toLocaleDateString() : '—'}</p>
+        </div>
+        <div class="modal-section">
+          <label>Status</label>
+          <p><strong style="text-transform: capitalize; color: ${booking.status === 'completed' ? '#16a34a' : booking.status === 'confirmed' ? '#1d4ed8' : '#9a6700'};">${booking.status || 'pending'}</strong></p>
+        </div>
+      `;
+
+      $('details-content').innerHTML = detailsHtml;
+      $('details-modal').classList.add('open');
+    }
+
+    function closeDetailsModal() {
+      $('details-modal').classList.remove('open');
+    }
+
+    function openStatusModal(bookingId) {
+      const booking = (window.currentBookings || []).find(b => b.id === bookingId);
+      if (!booking) return;
+
+      currentBookingId = bookingId;
+      $('status-select').value = booking.status || 'pending';
+      $('status-modal').classList.add('open');
+    }
+
+    function closeStatusModal() {
+      $('status-modal').classList.remove('open');
+      currentBookingId = null;
+    }
+
+    async function updateBookingStatus() {
+      if (!currentBookingId) return;
+
+      const newStatus = $('status-select').value;
+      const { error } = await db.from('bookings').update({ status: newStatus }).eq('id', currentBookingId);
+
+      if (error) {
+        alert(`Error updating status: ${error.message}`);
+      } else {
+        closeStatusModal();
+        loadBookings();
+      }
     }
 
     async function deleteAd(id) {
@@ -810,6 +1050,11 @@
 
     window.deleteAd = deleteAd;
     window.startAdEdit = startAdEdit;
+    window.viewBookingDetails = viewBookingDetails;
+    window.openStatusModal = openStatusModal;
+    window.closeStatusModal = closeStatusModal;
+    window.updateBookingStatus = updateBookingStatus;
+    window.closeDetailsModal = closeDetailsModal;
 
     async function start() {
       const { data: { session } } = await db.auth.getSession();
@@ -849,6 +1094,10 @@
 
     $('status-filter').addEventListener('change', loadBookings);
     $('date-filter').addEventListener('change', loadBookings);
+
+    // Close modals on background click
+    $('details-modal').addEventListener('click', (e) => { if (e.target.id === 'details-modal') closeDetailsModal(); });
+    $('status-modal').addEventListener('click', (e) => { if (e.target.id === 'status-modal') closeStatusModal(); });
 
     start();
   </script>
