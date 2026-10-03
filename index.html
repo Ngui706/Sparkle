@@ -602,7 +602,7 @@
           </div>
         </div>
         <div class="hero-photo">
-          <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=900&q=80" alt="Laundry basket ready for collection" />
+          <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=85" alt="Laundry basket ready for collection" />
           <div class="float-card">
             <p>Fresh laundry</p>
             <strong>Same day service</strong>
@@ -643,7 +643,7 @@
     <section id="about">
       <div class="container split">
         <div class="about-photo">
-          <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1000&q=80" alt="Laundry business at work" />
+          <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=900&q=85" alt="Laundry business at work" />
         </div>
         <div>
           <p class="eyebrow">Why choose us</p>
@@ -896,6 +896,11 @@
       'Light duvet': 'KSh 250 / duvet',
       'Heavy duvet': 'KSh 300 / duvet'
     };
+
+    const basketImage = document.querySelector('img[alt="Laundry basket ready for collection"]');
+    if (basketImage) basketImage.src = 'https://plus.unsplash.com/premium_photo-1679503073951-c9b5eda7ee29?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bGF1bmRyeXx8ZW58MXx8fGVufDB8fHx8';
+    const heavyDuvetImage = document.querySelector('img[alt="Clean heavy duvet"]');
+    if (heavyDuvetImage) heavyDuvetImage.src = 'https://plus.unsplash.com/premium_photo-1763466939637-9e2668f0966b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGxhdW5kcnl8ZW58MXx8fGVufDB8fHx8';
 
     document.querySelector('#pin-location').addEventListener('click', (event) => {
       event.preventDefault();
