@@ -668,7 +668,11 @@
     }
     createBackgroundAnimation();
 
-    const CONFIG = window.SPARKLE_CONFIG || { url: 'https://ddvzobvioyulvchokvwo.supabase.co', anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkdnpvYnZpb3l1bHZjaG9rdndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA3NDkwNjUsImV4cCI6MTc0NjMyNTA2NX0.bKz3MHBqj9v_VLwWrQfQQsj9v8P4cKqL6xH7q8Y9kNk' };
+    if (!window.SPARKLE_CONFIG || !window.SPARKLE_CONFIG.url || !window.SPARKLE_CONFIG.anonKey) {
+      throw new Error('Missing Supabase config. Copy the window.SPARKLE_CONFIG block from index.html before this page loads.');
+    }
+
+    const CONFIG = window.SPARKLE_CONFIG;
     const db = supabase.createClient(CONFIG.url, CONFIG.anonKey);
     const $ = (id) => document.getElementById(id);
     const safe = (value = '') => String(value).replace(/[&<>\"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
