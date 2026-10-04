@@ -92,6 +92,13 @@
     const authMessage = document.querySelector('#auth-message');
     const accountLabel = document.querySelector('#account-label');
     const setAuthMessage = (message, error = false) => { authMessage.textContent = message; authMessage.style.color = error ? '#a32929' : 'var(--teal)'; };
+    async function syncCustomerProfile(user) {
+      if (!dbClient || !user || !isUuid(user.id)) return;
+      const metadata = user.user_metadata || {};
+      const fullName = metadata.full_name || user.email?.split('@')[0] || 'Customer';
+      const { error } = await dbClient.from('profiles').upsert({ id: user.id, full_name: fullName, role: 'customer' }, { onConflict: 'id' });
+      if (error) console.warn('Customer profile sync failed:', error.message);
+    }
     const showBooking = (user) => {
       authGate.classList.add('hidden');
       bookingArea.classList.remove('hidden');
@@ -113,7 +120,7 @@
       setAuthMessage('Creating your account…');
       const { data, error } = await dbClient.auth.signUp({ email: form.get('email'), password: form.get('password'), options: { data: { full_name: form.get('full_name'), phone: form.get('phone') } } });
       if (error) return setAuthMessage(error.message, true);
-      if (data.user && isUuid(data.user.id)) await dbClient.from('profiles').upsert({ id: data.user.id, full_name: form.get('full_name'), role: 'customer' }, { onConflict: 'id' });
+      if (data.user) await syncCustomerProfile(data.user);
       if (data.session) showBooking(data.user);
       else setAuthMessage('Account created. Check your email to confirm it, then log in to book.');
     });
@@ -123,10 +130,11 @@
       setAuthMessage('Logging you in…');
       const { data, error } = await dbClient.auth.signInWithPassword({ email: form.get('email'), password: form.get('password') });
       if (error) return setAuthMessage(error.message, true);
+      await syncCustomerProfile(data.user);
       showBooking(data.user);
     });
     document.querySelector('#logout-customer').addEventListener('click', async () => { await dbClient.auth.signOut(); authGate.classList.remove('hidden'); bookingArea.classList.add('hidden'); setAuthMessage('You have been logged out.'); });
-    dbClient?.auth.getSession().then(({ data }) => { if (data.session) showBooking(data.session.user); });
+    dbClient?.auth.getSession().then(async ({ data }) => { if (data.session) { await syncCustomerProfile(data.session.user); showBooking(data.session.user); } });
     let pinnedLocation = '';
     const servicePrices = { 'Student wash': 'KSh 100 / kg', 'Wash & fold': 'KSh 100 / kg', 'Dry cleaning': 'Price confirmed after inspection', 'Light duvet': 'KSh 250 / duvet', 'Heavy duvet': 'KSh 300 / duvet', 'Mats & carpets': 'KSh 250 / item', 'Laundry basket': 'KSh 400 / basket', 'Pickup & delivery': 'Price confirmed after booking', 'Not sure yet': 'Price confirmed after booking' };
     document.querySelector('#pin-location').addEventListener('click', () => {
