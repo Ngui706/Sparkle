@@ -96,8 +96,12 @@
       if (!dbClient || !user || !isUuid(user.id)) return;
       const metadata = user.user_metadata || {};
       const fullName = metadata.full_name || user.email?.split('@')[0] || 'Customer';
-      const { error } = await dbClient.from('profiles').upsert({ id: user.id, full_name: fullName, phone: metadata.phone || null, role: 'customer' }, { onConflict: 'id' });
-      if (error) console.warn('Customer profile sync failed:', error.message);
+      const profileData = { id: user.id, full_name: fullName, email: user.email || null, phone: metadata.phone || null };
+      const { data: existingProfile } = await dbClient.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      const result = existingProfile && ['staff', 'admin'].includes(existingProfile.role)
+        ? await dbClient.from('profiles').update(profileData).eq('id', user.id)
+        : await dbClient.from('profiles').upsert({ ...profileData, role: 'customer' }, { onConflict: 'id' });
+      if (result.error) console.warn('Customer profile sync failed:', result.error.message);
     }
     const showBooking = (user) => {
       authGate.classList.add('hidden');
