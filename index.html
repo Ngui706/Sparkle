@@ -96,7 +96,7 @@
       if (!dbClient || !user || !isUuid(user.id)) return;
       const metadata = user.user_metadata || {};
       const fullName = metadata.full_name || user.email?.split('@')[0] || 'Customer';
-      const { error } = await dbClient.from('profiles').upsert({ id: user.id, full_name: fullName, role: 'customer' }, { onConflict: 'id' });
+      const { error } = await dbClient.from('profiles').upsert({ id: user.id, full_name: fullName, phone: metadata.phone || null, role: 'customer' }, { onConflict: 'id' });
       if (error) console.warn('Customer profile sync failed:', error.message);
     }
     const showBooking = (user) => {
