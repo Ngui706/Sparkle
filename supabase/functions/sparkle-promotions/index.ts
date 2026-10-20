@@ -107,7 +107,18 @@ Deno.serve(async request => {
     if (Array.isArray(result.messageIds)) messageIds.push(...result.messageIds);
     sent += batch.length;
   }
-  return json(request, { sent, eligible: recipients.length, messageIds });
+  const popupResponse = await fetch(`${supabaseUrl}/rest/v1/promotion_announcements`, {
+    method: 'POST',
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    },
+    body: JSON.stringify({ title, message, discount: discount || null, promo_code: promoCode || null, valid_until: expiry || null }),
+  });
+  if (!popupResponse.ok) console.error('Promotion emails were accepted, but homepage popup could not be published:', popupResponse.status, await popupResponse.text());
+  return json(request, { sent, eligible: recipients.length, messageIds, popupPublished: popupResponse.ok });
  } catch (error) {
   console.error('Unhandled sparkle-promotions error:', error);
   return json(request, { error: 'The promotion request failed inside the Edge Function. Check the sparkle-promotions function logs.' }, 500);
