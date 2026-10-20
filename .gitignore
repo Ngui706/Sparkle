@@ -3,6 +3,7 @@ supabase/*
 !supabase/migrations/
 supabase/migrations/*
 !supabase/migrations/202610200001_reviews_and_staff_email.sql
+!supabase/migrations/202610200002_staff_admin_parity.sql
 !supabase/functions/
 supabase/functions/*
 !supabase/functions/sparkle-staff-email/

@@ -80,3 +80,6 @@ for each row execute function public.sparkle_notify_new_booking();
 revoke all on function public.sparkle_send_staff_notification(jsonb) from public, anon, authenticated;
 revoke all on function public.sparkle_notify_new_account() from public, anon, authenticated;
 revoke all on function public.sparkle_notify_new_booking() from public, anon, authenticated;
+
+-- Make the new public table visible to Supabase's PostgREST API immediately.
+notify pgrst, 'reload schema';
