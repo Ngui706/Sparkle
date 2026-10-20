@@ -72,8 +72,10 @@ Deno.serve(async request => {
     return `${supabaseUrl}/functions/v1/sparkle-unsubscribe?user=${encodeURIComponent(userId)}&sig=${hex}`;
   };
   const details = [discount && `<p><strong>Offer:</strong> ${esc(discount)}</p>`, promoCode && `<p><strong>Promo code:</strong> ${esc(promoCode)}</p>`, expiry && `<p><strong>Valid until:</strong> ${esc(expiry)}</p>`].filter(Boolean).join('');
-  const batchSize = 1000;
+  // Keep each request comfortably within Brevo's messageVersions limits.
+  const batchSize = 99;
   let sent = 0;
+  const messageIds: string[] = [];
   for (let start = 0; start < recipients.length; start += batchSize) {
     const batch = recipients.slice(start, start + batchSize);
     const messageVersions = await Promise.all(batch.map(async customer => {
@@ -88,12 +90,24 @@ Deno.serve(async request => {
       body: JSON.stringify({ sender: { name: Deno.env.get('BREVO_SENDER_NAME') || 'Sparkle Laundry', email: senderEmail }, subject: `Sparkle Laundry: ${title}`, htmlContent: '<p>Sparkle Laundry promotion</p>', textContent: 'Sparkle Laundry promotion', messageVersions }),
     });
     if (!response.ok) {
-      console.error('Brevo promotion send failed', response.status, await response.text());
-      return json(request, { error: 'Brevo could not send the full promotion.', sent, eligible: recipients.length }, 502);
+      const responseBody = await response.text();
+      console.error('Brevo promotion send failed', response.status, responseBody);
+      let brevoMessage = responseBody;
+      try {
+        const parsed = JSON.parse(responseBody);
+        brevoMessage = parsed.message || parsed.code || responseBody;
+      } catch { /* Keep Brevo's raw response when it is not JSON. */ }
+      return json(request, {
+        error: `Brevo rejected the email request (${response.status}): ${brevoMessage.slice(0, 500)}`,
+        sent,
+        eligible: recipients.length,
+      }, 502);
     }
+    const result = await response.json().catch(() => ({}));
+    if (Array.isArray(result.messageIds)) messageIds.push(...result.messageIds);
     sent += batch.length;
   }
-  return json(request, { sent, eligible: recipients.length });
+  return json(request, { sent, eligible: recipients.length, messageIds });
  } catch (error) {
   console.error('Unhandled sparkle-promotions error:', error);
   return json(request, { error: 'The promotion request failed inside the Edge Function. Check the sparkle-promotions function logs.' }, 500);

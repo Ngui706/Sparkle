@@ -115,7 +115,7 @@
       const { data, error } = await db.functions.invoke('sparkle-promotions', { body: getPayload('send') });
       previewButton.disabled = false;
       if (error || data?.error) { const details = error ? await functionErrorDetails(error) : data; console.error('Promotion send failed:', error || data); $('promotion-message').textContent = details?.sent ? `${details.error} ${details.sent} of ${details.eligible} emails may already have been sent; check Brevo before retrying.` : details?.error || error.message; previewedCount = null; return; }
-      $('promotion-message').textContent = `Promotion sent to ${data.sent} of ${data.eligible} opted-in customers.`;
+      $('promotion-message').textContent = `Brevo accepted ${data.sent} of ${data.eligible} promotion emails. Check Brevo transactional logs for delivery, bounce, or blocked status.`;
       form.reset(); previewedCount = null; sendButton.disabled = true; sendButton.style.opacity = '.55'; sendButton.style.cursor = 'not-allowed';
     });
   }
