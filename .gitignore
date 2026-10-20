@@ -7,5 +7,9 @@ supabase/migrations/*
 supabase/functions/*
 !supabase/functions/sparkle-staff-email/
 !supabase/functions/sparkle-staff-email/index.ts
+!supabase/functions/sparkle-promotions/
+!supabase/functions/sparkle-promotions/index.ts
+!supabase/functions/sparkle-unsubscribe/
+!supabase/functions/sparkle-unsubscribe/index.ts
 SETUP.md
 .kilo

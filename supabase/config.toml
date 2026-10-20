@@ -1,2 +1,8 @@
 [functions.sparkle-staff-email]
 verify_jwt = false
+
+[functions.sparkle-promotions]
+verify_jwt = true
+
+[functions.sparkle-unsubscribe]
+verify_jwt = false

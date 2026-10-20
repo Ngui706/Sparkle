@@ -16,8 +16,10 @@ The migration creates the private review queue and its row-level security rules,
 In Brevo, create/verify the sender address you want Sparkle to use, and create an API key. Then set the Edge Function secrets (never put these values in HTML or commit them):
 
 ```sh
-supabase secrets set BREVO_API_KEY='your-brevo-api-key' BREVO_SENDER_EMAIL='verified-sender@example.com' BREVO_SENDER_NAME='Sparkle Laundry' SPARKLE_STAFF_EMAIL='vundingui844@gmail.com' SPARKLE_NOTIFICATION_WEBHOOK_SECRET='a-long-random-secret'
+supabase secrets set BREVO_API_KEY='your-brevo-api-key' BREVO_SENDER_EMAIL='verified-sender@example.com' BREVO_SENDER_NAME='Sparkle Laundry' SPARKLE_STAFF_EMAIL='vundingui844@gmail.com' SPARKLE_NOTIFICATION_WEBHOOK_SECRET='a-long-random-secret' SPARKLE_UNSUBSCRIBE_SECRET='another-long-random-secret'
 supabase functions deploy sparkle-staff-email
+supabase functions deploy sparkle-promotions
+supabase functions deploy sparkle-unsubscribe
 ```
 
 Create matching secrets in the Supabase SQL Editor so the database triggers can invoke the deployed function. Replace the URL with your project's function URL and use exactly the same random secret set above:
@@ -28,6 +30,12 @@ select vault.create_secret('a-long-random-secret', 'sparkle_notification_webhook
 ```
 
 The function is deployed without JWT verification because database `pg_net` requests are authenticated using the shared secret header. It rejects requests without that secret and only sends the two expected event types. Brevo API details remain in Supabase secrets. The staff inbox receives name, email and phone on account creation, and those details plus service, pickup location and requested date on each booking.
+
+## Staff promotions
+
+The staff portal promotion composer supports a subject/title, message, discount or offer, promo code, and expiry date. Staff or admins can preview the recipient count and confirm before sending. It sends individual personalized Brevo messages to confirmed customer accounts that opted in; recipients are never exposed to one another. The signup form now asks for marketing permission, and signed-in customers can change that preference from the booking page. Every promotion includes an unsubscribe link and the customer must confirm the request on the linked page.
+
+The `sparkle-promotions` function uses the authenticated staff session and Supabase's server-side service key to verify the staff role and find opted-in customer accounts. The `sparkle-unsubscribe` function verifies signed unsubscribe links and updates the customer's preference. Supabase supplies the service key to Edge Functions; do not copy it into browser code.
 
 ## Customer reviews
 

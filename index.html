@@ -102,6 +102,18 @@
     const bookingArea = document.querySelector('#booking-area');
     const authMessage = document.querySelector('#auth-message');
     const accountLabel = document.querySelector('#account-label');
+    const signupMarketingPreference = document.createElement('label');
+    signupMarketingPreference.style.cssText = 'display:flex;align-items:flex-start;gap:9px;font-size:.78rem;font-weight:500;color:var(--muted)';
+    signupMarketingPreference.innerHTML = '<input type="checkbox" name="marketing_opt_in" style="width:auto;margin:3px 0 0;accent-color:var(--teal)"><span>Email me Sparkle promotions, discounts and offers. I can unsubscribe at any time.</span>';
+    document.querySelector('#signup-form').insertBefore(signupMarketingPreference, document.querySelector('#signup-form button[type="submit"]'));
+    const marketingPreference = document.createElement('label');
+    marketingPreference.style.cssText = 'display:flex;align-items:center;gap:7px;font-size:.76rem;font-weight:600';
+    marketingPreference.innerHTML = '<input id="marketing-opt-in" type="checkbox" style="width:auto;margin:0;accent-color:var(--teal)"><span>Receive promotions by email</span>';
+    document.querySelector('.account-bar').insertBefore(marketingPreference, document.querySelector('#logout-customer'));
+    const marketingPreferenceMessage = document.createElement('small');
+    marketingPreferenceMessage.id = 'marketing-preference-message';
+    marketingPreferenceMessage.style.cssText = 'display:block;color:var(--teal);font-size:.74rem;margin-bottom:10px';
+    document.querySelector('.account-bar').after(marketingPreferenceMessage);
     const setAuthMessage = (message, error = false) => { authMessage.textContent = message; authMessage.style.color = error ? '#a32929' : 'var(--teal)'; };
     async function syncCustomerProfile(user) {
       if (!dbClient || !user || !isUuid(user.id)) return;
@@ -121,6 +133,7 @@
       accountLabel.textContent = `Logged in as ${metadata.full_name || user.email}`;
       bookingForm.elements.name.value = metadata.full_name || '';
       bookingForm.elements.phone.value = metadata.phone || '';
+      document.querySelector('#marketing-opt-in').checked = metadata.marketing_opt_in === true;
     };
     document.querySelectorAll('[data-auth-tab]').forEach(tab => tab.addEventListener('click', () => {
       const login = tab.dataset.authTab === 'login';
@@ -133,7 +146,7 @@
       event.preventDefault();
       const form = new FormData(event.currentTarget);
       setAuthMessage('Creating your account…');
-      const { data, error } = await dbClient.auth.signUp({ email: form.get('email'), password: form.get('password'), options: { data: { full_name: form.get('full_name'), phone: form.get('phone') } } });
+      const { data, error } = await dbClient.auth.signUp({ email: form.get('email'), password: form.get('password'), options: { data: { full_name: form.get('full_name'), phone: form.get('phone'), marketing_opt_in: form.get('marketing_opt_in') === 'on' } } });
       if (error) return setAuthMessage(error.message, true);
       if (data.user) await syncCustomerProfile(data.user);
       if (data.session) showBooking(data.user);
@@ -149,6 +162,14 @@
       showBooking(data.user);
     });
     document.querySelector('#logout-customer').addEventListener('click', async () => { await dbClient.auth.signOut(); authGate.classList.remove('hidden'); bookingArea.classList.add('hidden'); setAuthMessage('You have been logged out.'); });
+    document.querySelector('#marketing-opt-in').addEventListener('change', async event => {
+      const checkbox = event.currentTarget;
+      checkbox.disabled = true;
+      const { data, error } = await dbClient.auth.updateUser({ data: { marketing_opt_in: checkbox.checked } });
+      checkbox.disabled = false;
+      if (error) { checkbox.checked = !checkbox.checked; marketingPreferenceMessage.textContent = `Could not save your preference: ${error.message}`; return; }
+      marketingPreferenceMessage.textContent = data.user.user_metadata.marketing_opt_in ? 'You are subscribed to Sparkle offers.' : 'You are unsubscribed from Sparkle offers.';
+    });
     dbClient?.auth.getSession().then(async ({ data }) => { if (data.session) { await syncCustomerProfile(data.session.user); showBooking(data.session.user); } });
     let pinnedLocation = '';
     const servicePrices = { 'Student wash': 'KSh 100 / kg', 'Wash & fold': 'KSh 100 / kg', 'Dry cleaning': 'Price confirmed after inspection', 'Light duvet': 'KSh 250 / duvet', 'Heavy duvet': 'KSh 300 / duvet', 'Mats & carpets': 'KSh 250 / item', 'Laundry basket': 'KSh 400 / basket', 'Pickup & delivery': 'Price confirmed after booking', 'Not sure yet': 'Price confirmed after booking' };
