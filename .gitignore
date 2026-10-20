@@ -1,3 +1,11 @@
-supabase/
+supabase/*
+!supabase/config.toml
+!supabase/migrations/
+supabase/migrations/*
+!supabase/migrations/202610200001_reviews_and_staff_email.sql
+!supabase/functions/
+supabase/functions/*
+!supabase/functions/sparkle-staff-email/
+!supabase/functions/sparkle-staff-email/index.ts
 SETUP.md
 .kilo

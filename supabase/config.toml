@@ -1,0 +1,2 @@
+[functions.sparkle-staff-email]
+verify_jwt = false
