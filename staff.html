@@ -16,6 +16,7 @@
 @keyframes waveDrift{0%{transform:translateX(-3%) rotate(-1deg)}100%{transform:translateX(3%) rotate(1deg)}}
 @media(prefers-reduced-motion:reduce){.laundry-bg *,.laundry-bg:before,.laundry-bg:after{animation:none!important}.laundry-bg:before{bottom:-40px}}
 .customer-card{margin-top:24px}.customer-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.customer-toolbar h2{margin-bottom:5px}.customer-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin:18px 0 0;padding:0;background:transparent;box-shadow:none}.customer-form input{min-width:0}.customer-form button{white-space:nowrap}.customer-actions{display:flex;gap:7px;flex-wrap:wrap}.customer-actions button{padding:8px 10px;font-size:12px}.danger{background:#a32929}.customer-empty{text-align:center;padding:25px!important}@media(max-width:700px){.customer-form{grid-template-columns:1fr}.customer-form button{width:100%}}
+.finance-controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin:18px 0}.finance-controls label,.finance-form label{display:grid;gap:5px;color:#607473;font-size:13px;font-weight:700}.finance-controls input,.finance-controls select{min-width:180px}.finance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.finance-period{padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-period h3{margin:0 0 8px;color:#0e847e}.finance-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.finance-metric small{display:block;color:#607473;font-size:11px}.finance-metric b{display:block;margin-top:3px;font-size:15px}.finance-chart{margin-top:20px;padding:14px;border:1px solid #dce9e4;border-radius:12px;background:#fff;overflow:hidden}.finance-chart svg{display:block;width:100%;height:auto;min-height:260px}.finance-legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;color:#607473;font-size:12px}.finance-legend span{display:flex;align-items:center;gap:6px}.finance-legend i{width:12px;height:3px;border-radius:3px;background:#dce9e4}.finance-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-form input,.finance-form select{width:100%;box-sizing:border-box}.finance-entry-actions{display:flex;gap:8px}.finance-entry-actions button{padding:7px 10px;font-size:12px}.finance-profit-positive{color:#0e847e}.finance-profit-negative{color:#a32929}@media(max-width:700px){.finance-summary{grid-template-columns:1fr}.finance-form{grid-template-columns:1fr}.finance-chart{padding:6px}.finance-chart svg{min-height:220px}}
 </style></head>
 <body><div class="laundry-bg" aria-hidden="true"><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="fabric one"></span><span class="fabric two"></span><span class="fabric three"></span></div><div class="wrap"><div class="bar"><div class="brand">✦ Sparkle Laundry <span class="muted">/ Staff portal</span></div><button id="logout" class="hidden">Log out</button></div>
 <section id="login" class="card login"><h1>Welcome back</h1><p class="muted">Sign in to manage Karatina bookings.</p><form id="login-form"><input id="email" type="email" placeholder="Staff email" required><input id="password" type="password" placeholder="Password" required><button>Sign in</button><p id="login-message" class="error"></p></form></section>
@@ -109,15 +110,171 @@
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (!previewedCount) return;
-      if (!confirm(`Send this promotion to ${previewedCount} opted-in customer${previewedCount === 1 ? '' : 's'}?`)) return;
+      if (!confirm(`Send this promotion to ${previewedCount} opted-in customer${previewedCount === 1 ? '' : 's'} by email?`)) return;
       sendButton.disabled = true; previewButton.disabled = true;
-      $('promotion-message').textContent = 'Sending promotion emails…';
+      $('promotion-message').textContent = 'Sending promotion…';
       const { data, error } = await db.functions.invoke('sparkle-promotions', { body: getPayload('send') });
       previewButton.disabled = false;
-      if (error || data?.error) { const details = error ? await functionErrorDetails(error) : data; console.error('Promotion send failed:', error || data); $('promotion-message').textContent = details?.sent ? `${details.error} ${details.sent} of ${details.eligible} emails may already have been sent; check Brevo before retrying.` : details?.error || error.message; previewedCount = null; return; }
-      $('promotion-message').textContent = `Brevo accepted ${data.sent} of ${data.eligible} promotion emails${data.popupPublished ? ', and the offer popup is live on the homepage.' : '. The emails were accepted, but the homepage popup could not be published; check the Supabase function logs and apply the popup migration.'} Check Brevo transactional logs for delivery, bounce, or blocked status.`;
+      if (error || data?.error) { const details = error ? await functionErrorDetails(error) : data; console.error('Promotion send failed:', error || data); $('promotion-message').textContent = details?.error || error.message; previewedCount = null; return; }
+      $('promotion-message').textContent = `Brevo accepted ${data.sent} of ${data.eligible} promotion emails${data.errors?.length ? `. Some emails may not have been accepted: ${data.errors.join(' · ')}` : ''}${data.popupPublished ? ', and the offer popup is live on the homepage.' : '. The email was accepted, but the homepage popup could not be published; check the function logs and apply the popup migration.'} Check Brevo transactional logs for delivery status.`;
       form.reset(); previewedCount = null; sendButton.disabled = true; sendButton.style.opacity = '.55'; sendButton.style.cursor = 'not-allowed';
     });
+  }
+
+  function mountFinanceTools() {
+    $('app').insertAdjacentHTML('beforeend', `<section id="finance-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Revenue dashboard</h2><p class="muted">Track earnings, expenditure, and profit for any date.</p></div><button id="refresh-finance" type="button">Refresh dashboard</button></div><h3 style="margin:18px 0 8px">Cumulative totals · all recorded entries</h3><div class="finance-summary" id="finance-cumulative"><p class="muted">Loading all-time totals…</p></div><div class="finance-controls"><label>Dashboard date<input id="finance-as-of" type="date"></label><label>Trend view<select id="finance-trend-view"><option value="daily">Daily · last 14 days</option><option value="weekly">Weekly · last 12 weeks</option><option value="monthly">Monthly · last 12 months</option></select></label></div><div class="finance-summary" id="finance-summary"></div><div class="finance-chart"><div class="customer-toolbar"><h3 id="finance-chart-title">Daily trend</h3><span class="muted" id="finance-range"></span></div><div id="finance-chart-content" class="muted">Loading finance records…</div><div class="finance-legend"><span><i style="background:#0e847e"></i>Earnings</span><span><i style="background:#e69d35"></i>Expenditure</span><span><i style="background:#4560a6"></i>Profit</span></div></div><h3 style="margin:24px 0 8px">Add a finance entry</h3><p class="muted">Profit is calculated as earnings minus expenditure.</p><form id="finance-form" class="finance-form"><label>Entry type<select name="kind" required><option value="income">Earnings</option><option value="expense">Expenditure</option></select></label><label>Amount (KSh)<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label><label>Date<input name="entry_date" type="date" required></label><label>Description<input name="description" maxlength="200" required placeholder="e.g. Laundry orders or detergent purchase"></label><div class="full"><button type="submit">Save entry</button></div><p class="muted full" id="finance-message" role="status" style="margin:0"></p></form><h3 style="margin:24px 0 8px">Recent entries</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead><tbody id="finance-entries"></tbody></table><p class="muted customer-empty hidden" id="finance-empty">No finance entries in this period yet.</p></div></section>`);
+
+    const today = new Date();
+    const dateString = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const fromDateString = value => { const [year, month, day] = value.split('-').map(Number); return new Date(year, month - 1, day); };
+    const addDays = (date, count) => { const result = new Date(date); result.setDate(result.getDate() + count); return result; };
+    const startOfWeek = date => { const result = new Date(date); result.setDate(result.getDate() - ((result.getDay() + 6) % 7)); return result; };
+    const money = value => new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value || 0);
+    const compactMoney = value => new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', notation: 'compact', maximumFractionDigits: 1 }).format(value || 0);
+    const shortDate = date => date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+    const form = $('finance-form');
+    const dateInput = $('finance-as-of');
+    dateInput.value = dateString(today);
+    form.elements.entry_date.value = dateString(today);
+    let financeRows = [];
+
+    async function loadCumulativeTotals() {
+      const totals = { income: 0, expense: 0 };
+      for (let offset = 0; ; offset += 1000) {
+        const { data, error } = await db.from('finance_entries').select('kind,amount').order('created_at', { ascending: true }).range(offset, offset + 999);
+        if (error) { $('finance-cumulative').innerHTML = `<p class="error">Could not load cumulative totals: ${safe(error.message)}</p>`; return; }
+        (data || []).forEach(row => { totals[row.kind] += Number(row.amount) || 0; });
+        if (!data || data.length < 1000) break;
+      }
+      const profit = totals.income - totals.expense;
+      $('finance-cumulative').innerHTML = `<article class="finance-period"><h3>Total earnings</h3><div class="finance-metric"><b>${money(totals.income)}</b></div></article><article class="finance-period"><h3>Total expenditure</h3><div class="finance-metric"><b>${money(totals.expense)}</b></div></article><article class="finance-period"><h3>Cumulative profit</h3><div class="finance-metric"><b class="${profit < 0 ? 'finance-profit-negative' : 'finance-profit-positive'}">${money(profit)}</b></div></article>`;
+    }
+
+    const sumPeriod = (rows, start, end) => rows.reduce((totals, row) => {
+      if (row.entry_date < start || row.entry_date > end) return totals;
+      const amount = Number(row.amount) || 0;
+      if (row.kind === 'income') totals.income += amount;
+      else totals.expense += amount;
+      return totals;
+    }, { income: 0, expense: 0 });
+    const renderSummary = asOf => {
+      const selected = fromDateString(asOf);
+      const dayStart = dateString(selected);
+      const weekStart = dateString(startOfWeek(selected));
+      const monthStart = dateString(new Date(selected.getFullYear(), selected.getMonth(), 1));
+      const periods = [
+        { title: 'Selected day', start: dayStart, end: dayStart },
+        { title: 'Selected week', start: weekStart, end: dayStart },
+        { title: 'Selected month', start: monthStart, end: dayStart },
+      ];
+      $('finance-summary').innerHTML = periods.map(period => {
+        const total = sumPeriod(financeRows, period.start, period.end);
+        const profit = total.income - total.expense;
+        return `<article class="finance-period"><h3>${period.title}</h3><div class="finance-metrics"><div class="finance-metric"><small>Earnings</small><b>${money(total.income)}</b></div><div class="finance-metric"><small>Expenditure</small><b>${money(total.expense)}</b></div><div class="finance-metric"><small>Profit</small><b class="${profit < 0 ? 'finance-profit-negative' : 'finance-profit-positive'}">${money(profit)}</b></div></div></article>`;
+      }).join('');
+    };
+    const buildBuckets = (asOf, view) => {
+      const selected = fromDateString(asOf);
+      let buckets = [];
+      if (view === 'daily') {
+        const first = addDays(selected, -13);
+        buckets = Array.from({ length: 14 }, (_, index) => { const date = addDays(first, index); const key = dateString(date); return { key, label: shortDate(date), fullLabel: date.toLocaleDateString('en-KE'), income: 0, expense: 0 }; });
+      } else if (view === 'weekly') {
+        const selectedWeek = startOfWeek(selected);
+        const first = addDays(selectedWeek, -77);
+        buckets = Array.from({ length: 12 }, (_, index) => { const date = addDays(first, index * 7); const key = dateString(date); return { key, label: shortDate(date), fullLabel: `Week of ${date.toLocaleDateString('en-KE')}`, income: 0, expense: 0 }; });
+      } else {
+        const first = new Date(selected.getFullYear(), selected.getMonth() - 11, 1);
+        buckets = Array.from({ length: 12 }, (_, index) => { const date = new Date(first.getFullYear(), first.getMonth() + index, 1); const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}`; return { key, label: date.toLocaleDateString('en-KE', { month: 'short', year: '2-digit' }), fullLabel: date.toLocaleDateString('en-KE', { month: 'long', year: 'numeric' }), income: 0, expense: 0 }; });
+      }
+      const byKey = new Map(buckets.map(bucket => [bucket.key, bucket]));
+      financeRows.forEach(row => {
+        let key = row.entry_date;
+        if (view === 'weekly') key = dateString(startOfWeek(fromDateString(row.entry_date)));
+        if (view === 'monthly') key = row.entry_date.slice(0, 7);
+        const bucket = byKey.get(key);
+        if (bucket) bucket[row.kind] += Number(row.amount) || 0;
+      });
+      return buckets.map(bucket => ({ ...bucket, profit: bucket.income - bucket.expense }));
+    };
+    const renderChart = (asOf, view) => {
+      const rows = buildBuckets(asOf, view);
+      const title = view === 'daily' ? 'Daily trend · last 14 days' : view === 'weekly' ? 'Weekly trend · last 12 weeks' : 'Monthly trend · last 12 months';
+      $('finance-chart-title').textContent = title;
+      const selected = fromDateString(asOf);
+      const chartStart = view === 'daily' ? dateString(addDays(selected, -13)) : view === 'weekly' ? dateString(addDays(startOfWeek(selected), -77)) : dateString(new Date(selected.getFullYear(), selected.getMonth() - 11, 1));
+      $('finance-range').textContent = `${shortDate(fromDateString(chartStart))} – ${selected.toLocaleDateString('en-KE')}`;
+      const width = 900, height = 310, left = 82, right = 18, top = 22, bottom = 52;
+      const plotWidth = width - left - right, plotHeight = height - top - bottom;
+      const values = rows.flatMap(row => [row.income, row.expense, row.profit]);
+      let min = Math.min(0, ...values), max = Math.max(1, ...values);
+      const padding = Math.max((max - min) * .08, 1); min -= padding; max += padding;
+      const x = index => left + (rows.length <= 1 ? plotWidth / 2 : index * plotWidth / (rows.length - 1));
+      const y = value => top + (max - value) / (max - min) * plotHeight;
+      const series = [{ key: 'income', color: '#0e847e' }, { key: 'expense', color: '#e69d35' }, { key: 'profit', color: '#4560a6' }];
+      const grids = Array.from({ length: 5 }, (_, index) => { const value = max - (max - min) * index / 4; const yPos = y(value); return `<line x1="${left}" y1="${yPos}" x2="${width-right}" y2="${yPos}" stroke="#e4efeb"/><text x="${left-9}" y="${yPos+4}" text-anchor="end" fill="#607473" font-size="11">${safe(compactMoney(value))}</text>`; }).join('');
+      const lines = series.map(item => { const path = rows.map((row, index) => `${index ? 'L' : 'M'}${x(index)},${y(row[item.key])}`).join(' '); const points = rows.map((row, index) => `<circle cx="${x(index)}" cy="${y(row[item.key])}" r="2.8" fill="${item.color}"><title>${safe(row.fullLabel)} · ${item.key}: ${safe(money(row[item.key]))}</title></circle>`).join(''); return `<path d="${path}" fill="none" stroke="${item.color}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>${points}`; }).join('');
+      const tickIndexes = [...new Set([0, ...Array.from({ length: 5 }, (_, index) => Math.round((rows.length - 1) * (index + 1) / 6)), rows.length - 1])];
+      const ticks = tickIndexes.map(index => `<text x="${x(index)}" y="${height-20}" text-anchor="middle" fill="#607473" font-size="11">${safe(rows[index].label)}</text>`).join('');
+      $('finance-chart-content').innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${title}: earnings, expenditure, and profit"><title>${title}</title>${grids}${lines}${ticks}</svg>`;
+    };
+    const renderEntries = () => {
+      const visible = [...financeRows].sort((a,b) => b.entry_date.localeCompare(a.entry_date) || b.created_at.localeCompare(a.created_at)).slice(0, 40);
+      $('finance-entries').innerHTML = visible.map(row => `<tr><td>${safe(fromDateString(row.entry_date).toLocaleDateString('en-KE'))}</td><td>${row.kind === 'income' ? 'Earnings' : 'Expenditure'}</td><td>${safe(row.description)}</td><td>${money(Number(row.amount))}</td><td><button type="button" class="finance-delete danger" data-id="${safe(row.id)}">Delete</button></td></tr>`).join('');
+      $('finance-empty').classList.toggle('hidden', visible.length > 0);
+      document.querySelectorAll('.finance-delete').forEach(button => button.addEventListener('click', async () => {
+        if (!confirm('Delete this finance entry?')) return;
+        const { error } = await db.from('finance_entries').delete().eq('id', button.dataset.id);
+        if (error) return $('finance-message').textContent = error.message;
+        $('finance-message').textContent = 'Entry deleted.';
+        await loadFinance();
+      }));
+    };
+    async function loadFinance() {
+      const cumulativeRequest = loadCumulativeTotals();
+      const asOf = dateInput.value || dateString(new Date());
+      const selected = fromDateString(asOf);
+      const from = new Date(selected.getFullYear(), selected.getMonth() - 11, 1);
+      const fromString = dateString(from);
+      financeRows = [];
+      for (let offset = 0; ; offset += 1000) {
+        const { data, error } = await db.from('finance_entries').select('id,entry_date,kind,description,amount,created_at').gte('entry_date', fromString).lte('entry_date', asOf).order('entry_date', { ascending: false }).range(offset, offset + 999);
+        if (error) { $('finance-message').textContent = error.message; $('finance-chart-content').textContent = 'Could not load finance data.'; return; }
+        financeRows.push(...(data || []));
+        if (!data || data.length < 1000) break;
+      }
+      renderSummary(asOf);
+      renderChart(asOf, $('finance-trend-view').value);
+      renderEntries();
+      await cumulativeRequest;
+    }
+    dateInput.addEventListener('change', loadFinance);
+    $('finance-trend-view').addEventListener('change', () => renderChart(dateInput.value, $('finance-trend-view').value));
+    $('refresh-finance').addEventListener('click', loadFinance);
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const values = new FormData(form);
+      const { data: { user } } = await db.auth.getUser();
+      const amount = Number(values.get('amount'));
+      if (!Number.isFinite(amount) || amount <= 0) return $('finance-message').textContent = 'Enter an amount greater than zero.';
+      const { error } = await db.from('finance_entries').insert({
+        entry_date: values.get('entry_date'),
+        kind: values.get('kind'),
+        description: String(values.get('description')).trim(),
+        amount,
+        created_by: user?.id,
+      });
+      if (error) return $('finance-message').textContent = error.message;
+      $('finance-message').textContent = 'Finance entry saved.';
+      const savedDate = values.get('entry_date');
+      form.reset();
+      form.elements.entry_date.value = savedDate;
+      form.elements.kind.value = 'income';
+      dateInput.value = savedDate;
+      await loadFinance();
+    });
+    loadFinance();
   }
 
   async function loadReviews() {
@@ -128,6 +285,6 @@
     document.querySelectorAll('.review-status').forEach(button => button.addEventListener('click', async () => { const { error } = await db.from('reviews').update({ status: button.dataset.status }).eq('id', button.dataset.id); if (error) return alert(error.message); loadReviews(); }));
     document.querySelectorAll('.review-delete').forEach(button => button.addEventListener('click', async () => { if (!confirm('Delete this review permanently?')) return; const { error } = await db.from('reviews').delete().eq('id', button.dataset.id); if (error) return alert(error.message); loadReviews(); }));
   }
-  async function start() { const { data: { session } } = await db.auth.getSession(); if (!session) return; if (!isUuid(session.user?.id)) return $('login-message').textContent = 'This session has an invalid account ID. Please log in again.'; const { data: profile, error: profileError } = await db.from('profiles').select('full_name,role').eq('id', session.user.id).maybeSingle(); if (profileError) return $('login-message').textContent = `Could not load your profile: ${profileError.message}`; if (!profile) return $('login-message').textContent = 'No staff profile exists for this account. Promote the account in Supabase first.'; if (!['staff','admin'].includes(profile.role)) return $('login-message').textContent = `This account has the role “${profile.role}”. Staff portal access requires staff or admin. Promote this account in Supabase, then log in again.`; $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('logout').classList.remove('hidden'); $('role').textContent = `${profile.full_name || session.user.email} · ${profile.role}`; loadBookings(); loadCustomers(); mountPromotionTools(); $('admin-tools').classList.remove('hidden'); $('admin-tools').insertAdjacentHTML('beforeend', '<section id="review-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Customer reviews</h2><p class="muted">Approve reviews to publish them on the homepage, or reject/remove them.</p></div><button id="refresh-reviews" type="button">Refresh reviews</button></div><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Submitted</th><th>Status / action</th></tr></thead><tbody id="reviews"></tbody></table><p id="reviews-empty" class="muted customer-empty hidden">No reviews submitted yet.</p></div></section>'); $('refresh-reviews').addEventListener('click', loadReviews); loadReviews(); loadAds(); }
+  async function start() { const { data: { session } } = await db.auth.getSession(); if (!session) return; if (!isUuid(session.user?.id)) return $('login-message').textContent = 'This session has an invalid account ID. Please log in again.'; const { data: profile, error: profileError } = await db.from('profiles').select('full_name,role').eq('id', session.user.id).maybeSingle(); if (profileError) return $('login-message').textContent = `Could not load your profile: ${profileError.message}`; if (!profile) return $('login-message').textContent = 'No staff profile exists for this account. Promote the account in Supabase first.'; if (!['staff','admin'].includes(profile.role)) return $('login-message').textContent = `This account has the role “${profile.role}”. Staff portal access requires staff or admin. Promote this account in Supabase, then log in again.`; $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('logout').classList.remove('hidden'); $('role').textContent = `${profile.full_name || session.user.email} · ${profile.role}`; loadBookings(); loadCustomers(); mountPromotionTools(); mountFinanceTools(); $('admin-tools').classList.remove('hidden'); $('admin-tools').insertAdjacentHTML('beforeend', '<section id="review-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Customer reviews</h2><p class="muted">Approve reviews to publish them on the homepage, or reject/remove them.</p></div><button id="refresh-reviews" type="button">Refresh reviews</button></div><div class="table-wrap"><table><thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Submitted</th><th>Status / action</th></tr></thead><tbody id="reviews"></tbody></table><p id="reviews-empty" class="muted customer-empty hidden">No reviews submitted yet.</p></div></section>'); $('refresh-reviews').addEventListener('click', loadReviews); loadReviews(); loadAds(); }
   $('login-form').addEventListener('submit', async (event) => { event.preventDefault(); $('login-message').textContent = ''; const { error } = await db.auth.signInWithPassword({ email: $('email').value, password: $('password').value }); if (error) $('login-message').textContent = error.message; else start(); }); $('logout').addEventListener('click', async () => { await db.auth.signOut(); location.reload(); }); $('refresh').addEventListener('click', loadBookings); $('status-filter').addEventListener('change', loadBookings); start();
 </script></body></html>

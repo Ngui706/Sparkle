@@ -33,9 +33,13 @@ The function is deployed without JWT verification because database `pg_net` requ
 
 ## Staff promotions
 
-The staff portal promotion composer supports a subject/title, message, discount or offer, promo code, and expiry date. Staff or admins can preview the recipient count and confirm before sending. It sends individual personalized Brevo messages to confirmed customer accounts that opted in; recipients are never exposed to one another. The signup form now asks for marketing permission, and signed-in customers can change that preference from the booking page. Every promotion includes an unsubscribe link and the customer must confirm the request on the linked page.
+The staff portal promotion composer supports a subject/title, message, discount or offer, promo code, and expiry date. Staff or admins can preview the recipient count and confirm before sending email promotions through Brevo to confirmed customers who opted in; recipients are never exposed to one another. The signup form asks for email marketing permission, and signed-in customers can change that preference from the booking page. Every promotion includes an unsubscribe link and the customer must confirm the request on the linked page. WhatsApp remains available for customer-initiated contact and booking actions, but promotions are email only.
 
 The `sparkle-promotions` function uses the authenticated staff session and Supabase's server-side service key to verify the staff role and find opted-in customer accounts. The `sparkle-unsubscribe` function verifies signed unsubscribe links and updates the customer's preference. Supabase supplies the service key to Edge Functions; do not copy it into browser code.
+
+## Staff finance dashboard
+
+The staff portal records dated earnings and expenditure entries in `finance_entries`. Profit is calculated as earnings minus expenditure. The dashboard shows totals for the selected day, Monday-to-date week, and month-to-date, with selectable 14-day, 12-week, and 12-month trend charts. Apply `supabase/migrations/202610270001_finance_dashboard.sql` with `supabase db push`; row-level security allows staff and admins to view and manage finance records.
 
 ## Customer reviews
 

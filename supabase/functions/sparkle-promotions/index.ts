@@ -16,7 +16,7 @@ Deno.serve(async request => {
   const brevoKey = Deno.env.get('BREVO_API_KEY');
   const senderEmail = Deno.env.get('BREVO_SENDER_EMAIL');
   const unsubSecret = Deno.env.get('SPARKLE_UNSUBSCRIBE_SECRET');
-  if (!supabaseUrl || !anonKey || !serviceKey || !brevoKey || !senderEmail || !unsubSecret) return json(request, { error: 'Promotion email service is not configured.' }, 500);
+  if (!supabaseUrl || !anonKey || !serviceKey) return json(request, { error: 'Supabase function configuration is incomplete.' }, 500);
 
   const authorization = request.headers.get('authorization') || '';
   if (!authorization.startsWith('Bearer ')) return json(request, { error: 'Sign in to send a promotion.' }, 401);
@@ -40,73 +40,76 @@ Deno.serve(async request => {
   if (!title || title.length > 100 || !message || message.length > 2500 || discount.length > 120 || promoCode.length > 80 || expiry.length > 80) {
     return json(request, { error: 'Add a title and message. Keep the title under 100 characters and message under 2,500.' }, 400);
   }
-
-  const recipients: Array<{ id: string; email: string; name: string }> = [];
+  const emailRecipients: Array<{ id: string; email: string; name: string }> = [];
   for (let page = 1; page <= 100; page++) {
     const usersResponse = await fetch(`${supabaseUrl}/auth/v1/admin/users?page=${page}&per_page=100`, { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } });
     if (!usersResponse.ok) return json(request, { error: 'Could not load customer accounts.' }, 502);
     const usersPage = (await usersResponse.json()).users || [];
     if (!usersPage.length) break;
     const ids = usersPage.map((user: any) => String(user.id)).filter((id: string) => /^[0-9a-f-]{36}$/i.test(id));
-    const roleById = new Map<string,string>();
+    const profileById = new Map<string, { role: string }>();
     if (ids.length) {
       const rolesResponse = await fetch(`${supabaseUrl}/rest/v1/profiles?select=id,role&id=in.(${ids.map(encodeURIComponent).join(',')})`, { headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` } });
       if (!rolesResponse.ok) return json(request, { error: 'Could not verify customer account roles.' }, 502);
-      for (const profile of await rolesResponse.json()) roleById.set(profile.id, profile.role);
+      for (const profile of await rolesResponse.json()) profileById.set(profile.id, profile);
     }
     for (const user of usersPage) {
-      const role = roleById.get(user.id);
-      if (user.email && user.email_confirmed_at && user.user_metadata?.marketing_opt_in === true && !['staff','admin'].includes(role || '')) {
-        recipients.push({ id: user.id, email: user.email, name: user.user_metadata?.full_name || user.email.split('@')[0] });
+      const profile = profileById.get(user.id);
+      const role = profile?.role;
+      if (['staff','admin'].includes(role || '')) continue;
+      const name = String(user.user_metadata?.full_name || user.email?.split('@')[0] || 'Customer');
+      if (user.email && user.email_confirmed_at && user.user_metadata?.marketing_opt_in === true) {
+        emailRecipients.push({ id: user.id, email: user.email, name });
       }
     }
     if (usersPage.length < 100) break;
   }
-  if (action === 'preview') return json(request, { eligible: recipients.length });
-  if (!recipients.length) return json(request, { error: 'No confirmed customers have opted in to promotions yet.', eligible: 0 }, 409);
+  const eligible = emailRecipients.length;
+  if (action === 'preview') return json(request, { eligible });
+  if (!eligible) return json(request, { error: 'No confirmed customers have opted in to promotions yet.', eligible }, 409);
 
-  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(unsubSecret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const unsubscribeUrl = async (userId: string) => {
-    const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(userId)));
-    const hex = [...sig].map(byte => byte.toString(16).padStart(2,'0')).join('');
-    return `${supabaseUrl}/functions/v1/sparkle-unsubscribe?user=${encodeURIComponent(userId)}&sig=${hex}`;
+  const sendErrors: string[] = [];
+  const emailResult = { sent: 0, eligible: emailRecipients.length, messageIds: [] as string[] };
+  const providerError = async (response: Response, provider: string, channel: string) => {
+    const body = await response.text();
+    console.error(`${provider} ${channel} promotion send failed`, response.status, body);
+    let message = body;
+    try { const parsed = JSON.parse(body); message = parsed.error?.message || parsed.message || parsed.code || body; } catch { /* Preserve non-JSON response text. */ }
+    return `${provider} ${channel} send failed (${response.status}): ${message.slice(0, 350)}`;
   };
-  const details = [discount && `<p><strong>Offer:</strong> ${esc(discount)}</p>`, promoCode && `<p><strong>Promo code:</strong> ${esc(promoCode)}</p>`, expiry && `<p><strong>Valid until:</strong> ${esc(expiry)}</p>`].filter(Boolean).join('');
-  // Keep each request comfortably within Brevo's messageVersions limits.
-  const batchSize = 99;
-  let sent = 0;
-  const messageIds: string[] = [];
-  for (let start = 0; start < recipients.length; start += batchSize) {
-    const batch = recipients.slice(start, start + batchSize);
-    const messageVersions = await Promise.all(batch.map(async customer => {
-      const link = await unsubscribeUrl(customer.id);
-      const greeting = `Hello ${esc(customer.name)},`;
-      const html = `<div style="font:16px Arial,sans-serif;color:#123232;line-height:1.6;max-width:640px"><h1 style="color:#0e847e">${esc(title)}</h1><p>${greeting}</p><p>${esc(message).replace(/\r?\n/g,'<br>')}</p>${details}<hr style="border:0;border-top:1px solid #dce9e4;margin:28px 0"><p style="font-size:12px;color:#607473">You receive Sparkle promotions because you opted in. <a href="${link}">Unsubscribe from future offers</a>.</p></div>`;
-      const text = `${title}\n\n${greeting}\n\n${message}${discount ? `\n\nOffer: ${discount}` : ''}${promoCode ? `\nPromo code: ${promoCode}` : ''}${expiry ? `\nValid until: ${expiry}` : ''}\n\nYou receive Sparkle promotions because you opted in. Unsubscribe: ${link}`;
-      return { to: [{ email: customer.email, name: customer.name }], subject: `Sparkle Laundry: ${title}`, htmlContent: html, textContent: text };
-    }));
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST', headers: { 'api-key': brevoKey, 'content-type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify({ sender: { name: Deno.env.get('BREVO_SENDER_NAME') || 'Sparkle Laundry', email: senderEmail }, subject: `Sparkle Laundry: ${title}`, htmlContent: '<p>Sparkle Laundry promotion</p>', textContent: 'Sparkle Laundry promotion', messageVersions }),
-    });
-    if (!response.ok) {
-      const responseBody = await response.text();
-      console.error('Brevo promotion send failed', response.status, responseBody);
-      let brevoMessage = responseBody;
-      try {
-        const parsed = JSON.parse(responseBody);
-        brevoMessage = parsed.message || parsed.code || responseBody;
-      } catch { /* Keep Brevo's raw response when it is not JSON. */ }
-      return json(request, {
-        error: `Brevo rejected the email request (${response.status}): ${brevoMessage.slice(0, 500)}`,
-        sent,
-        eligible: recipients.length,
-      }, 502);
+
+  if (emailRecipients.length) {
+    if (!brevoKey || !senderEmail || !unsubSecret) sendErrors.push('Brevo email settings are missing.');
+    else {
+      const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(unsubSecret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+      const unsubscribeUrl = async (userId: string) => {
+        const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(userId)));
+        const hex = [...sig].map(byte => byte.toString(16).padStart(2,'0')).join('');
+        return `${supabaseUrl}/functions/v1/sparkle-unsubscribe?user=${encodeURIComponent(userId)}&sig=${hex}`;
+      };
+      const details = [discount && `<p><strong>Offer:</strong> ${esc(discount)}</p>`, promoCode && `<p><strong>Promo code:</strong> ${esc(promoCode)}</p>`, expiry && `<p><strong>Valid until:</strong> ${esc(expiry)}</p>`].filter(Boolean).join('');
+      for (let start = 0; start < emailRecipients.length; start += 99) {
+        const batch = emailRecipients.slice(start, start + 99);
+        const messageVersions = await Promise.all(batch.map(async customer => {
+          const link = await unsubscribeUrl(customer.id);
+          const greeting = `Hello ${esc(customer.name)},`;
+          const html = `<div style="font:16px Arial,sans-serif;color:#123232;line-height:1.6;max-width:640px"><h1 style="color:#0e847e">${esc(title)}</h1><p>${greeting}</p><p>${esc(message).replace(/\r?\n/g,'<br>')}</p>${details}<hr style="border:0;border-top:1px solid #dce9e4;margin:28px 0"><p style="font-size:12px;color:#607473">You receive Sparkle promotions because you opted in. <a href="${link}">Unsubscribe from future offers</a>.</p></div>`;
+          const text = `${title}\n\n${greeting}\n\n${message}${discount ? `\n\nOffer: ${discount}` : ''}${promoCode ? `\nPromo code: ${promoCode}` : ''}${expiry ? `\nValid until: ${expiry}` : ''}\n\nYou receive Sparkle promotions because you opted in. Unsubscribe: ${link}`;
+          return { to: [{ email: customer.email, name: customer.name }], subject: `Sparkle Laundry: ${title}`, htmlContent: html, textContent: text };
+        }));
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST', headers: { 'api-key': brevoKey, 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({ sender: { name: Deno.env.get('BREVO_SENDER_NAME') || 'Sparkle Laundry', email: senderEmail }, subject: `Sparkle Laundry: ${title}`, htmlContent: '<p>Sparkle Laundry promotion</p>', textContent: 'Sparkle Laundry promotion', messageVersions }),
+        });
+        if (!response.ok) { sendErrors.push(await providerError(response, 'Brevo', 'email')); break; }
+        const result = await response.json().catch(() => ({}));
+        if (Array.isArray(result.messageIds)) emailResult.messageIds.push(...result.messageIds);
+        emailResult.sent += batch.length;
+      }
     }
-    const result = await response.json().catch(() => ({}));
-    if (Array.isArray(result.messageIds)) messageIds.push(...result.messageIds);
-    sent += batch.length;
   }
+
+  if (!emailResult.sent) return json(request, { error: sendErrors.join(' ') || 'Brevo did not accept any messages.', sent: emailResult.sent, eligible }, 502);
   const popupResponse = await fetch(`${supabaseUrl}/rest/v1/promotion_announcements`, {
     method: 'POST',
     headers: {
@@ -117,8 +120,8 @@ Deno.serve(async request => {
     },
     body: JSON.stringify({ title, message, discount: discount || null, promo_code: promoCode || null, valid_until: expiry || null }),
   });
-  if (!popupResponse.ok) console.error('Promotion emails were accepted, but homepage popup could not be published:', popupResponse.status, await popupResponse.text());
-  return json(request, { sent, eligible: recipients.length, messageIds, popupPublished: popupResponse.ok });
+  if (!popupResponse.ok) console.error('Promotion messages were accepted, but homepage popup could not be published:', popupResponse.status, await popupResponse.text());
+  return json(request, { sent: emailResult.sent, eligible, messageIds: emailResult.messageIds, errors: sendErrors, popupPublished: popupResponse.ok });
  } catch (error) {
   console.error('Unhandled sparkle-promotions error:', error);
   return json(request, { error: 'The promotion request failed inside the Edge Function. Check the sparkle-promotions function logs.' }, 500);
