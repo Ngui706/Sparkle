@@ -16,7 +16,7 @@
 @keyframes waveDrift{0%{transform:translateX(-3%) rotate(-1deg)}100%{transform:translateX(3%) rotate(1deg)}}
 @media(prefers-reduced-motion:reduce){.laundry-bg *,.laundry-bg:before,.laundry-bg:after{animation:none!important}.laundry-bg:before{bottom:-40px}}
 .customer-card{margin-top:24px}.customer-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.customer-toolbar h2{margin-bottom:5px}.customer-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin:18px 0 0;padding:0;background:transparent;box-shadow:none}.customer-form input{min-width:0}.customer-form button{white-space:nowrap}.customer-actions{display:flex;gap:7px;flex-wrap:wrap}.customer-actions button{padding:8px 10px;font-size:12px}.danger{background:#a32929}.customer-empty{text-align:center;padding:25px!important}@media(max-width:700px){.customer-form{grid-template-columns:1fr}.customer-form button{width:100%}}
-.finance-controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin:18px 0}.finance-controls label,.finance-form label{display:grid;gap:5px;color:#607473;font-size:13px;font-weight:700}.finance-controls input,.finance-controls select{min-width:180px}.finance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.finance-summary.cumulative{grid-template-columns:repeat(4,minmax(0,1fr))}.finance-period{padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-period h3{margin:0 0 8px;color:#0e847e}.finance-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.finance-metric small{display:block;color:#607473;font-size:11px}.finance-metric b{display:block;margin-top:3px;font-size:15px}.finance-chart{margin-top:20px;padding:14px;border:1px solid #dce9e4;border-radius:12px;background:#fff;overflow:hidden}.finance-chart svg{display:block;width:100%;height:auto;min-height:260px}.finance-legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;color:#607473;font-size:12px}.finance-legend span{display:flex;align-items:center;gap:6px}.finance-legend i{width:12px;height:3px;border-radius:3px;background:#dce9e4}.finance-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-form input,.finance-form select{width:100%;box-sizing:border-box}.finance-entry-actions{display:flex;gap:8px}.finance-entry-actions button{padding:7px 10px;font-size:12px}.finance-profit-positive{color:#0e847e}.finance-profit-negative{color:#a32929}@media(max-width:900px){.finance-summary.cumulative{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.finance-summary{grid-template-columns:1fr}.finance-form{grid-template-columns:1fr}.finance-chart{padding:6px}.finance-chart svg{min-height:220px}}
+.finance-controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin:18px 0}.finance-controls label,.finance-form label{display:grid;gap:5px;color:#607473;font-size:13px;font-weight:700}.finance-controls input,.finance-controls select{min-width:180px}.finance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}#finance-summary{grid-template-columns:repeat(5,minmax(0,1fr))}#finance-summary .finance-metrics{grid-template-columns:1fr;gap:3px}#finance-summary .finance-metric{display:flex;justify-content:space-between;align-items:baseline;gap:8px}#finance-summary .finance-metric small{font-size:10px}#finance-summary .finance-metric b{font-size:13px;margin-top:0}.finance-summary.cumulative{grid-template-columns:repeat(4,minmax(0,1fr))}.finance-period{padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-period h3{margin:0 0 8px;color:#0e847e}.finance-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.finance-metric small{display:block;color:#607473;font-size:11px}.finance-metric b{display:block;margin-top:3px;font-size:15px}.finance-chart{margin-top:20px;padding:14px;border:1px solid #dce9e4;border-radius:12px;background:#fff;overflow:hidden}.finance-chart svg{display:block;width:100%;height:auto;min-height:260px}.finance-legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;color:#607473;font-size:12px}.finance-legend span{display:flex;align-items:center;gap:6px}.finance-legend i{width:12px;height:3px;border-radius:3px;background:#dce9e4}.finance-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-form input,.finance-form select{width:100%;box-sizing:border-box}.finance-entry-actions{display:flex;gap:8px;flex-wrap:wrap}.finance-entry-actions button{padding:7px 10px;font-size:12px}.finance-edit{background:#4560a6}.finance-cancel{background:#607473}.finance-profit-positive{color:#0e847e}.finance-profit-negative{color:#a32929}@media(max-width:1000px){#finance-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:900px){.finance-summary.cumulative{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.finance-summary{grid-template-columns:1fr}#finance-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-form{grid-template-columns:1fr}.finance-controls{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.finance-controls label,.finance-controls input,.finance-controls select{min-width:0;width:100%;box-sizing:border-box}.finance-chart{padding:6px}.finance-chart svg{min-height:220px}.finance-entry-actions{min-width:112px}}@media(max-width:460px){#finance-summary,.finance-summary.cumulative,.finance-controls{grid-template-columns:1fr}.finance-period{padding:13px}.finance-controls{gap:10px}.customer-toolbar>#refresh-finance{width:100%}}
 </style></head>
 <body><div class="laundry-bg" aria-hidden="true"><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="fabric one"></span><span class="fabric two"></span><span class="fabric three"></span></div><div class="wrap"><div class="bar"><div class="brand">✦ Sparkle Laundry <span class="muted">/ Staff portal</span></div><button id="logout" class="hidden">Log out</button></div>
 <section id="login" class="card login"><h1>Welcome back</h1><p class="muted">Sign in to manage Karatina bookings.</p><form id="login-form"><input id="email" type="email" placeholder="Staff email" required><input id="password" type="password" placeholder="Password" required><button>Sign in</button><p id="login-message" class="error"></p></form></section>
@@ -122,7 +122,7 @@
   }
 
   function mountFinanceTools() {
-    $('app').insertAdjacentHTML('beforeend', `<section id="finance-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Revenue dashboard</h2><p class="muted">Track earnings, expenditure, and profit for any date.</p></div><button id="refresh-finance" type="button">Refresh dashboard</button></div><h3 style="margin:18px 0 8px">Cumulative totals · all recorded entries</h3><div class="finance-summary cumulative" id="finance-cumulative"><p class="muted">Loading all-time totals…</p></div><div class="finance-controls"><label>Dashboard date<input id="finance-as-of" type="date"></label><label>Trend view<select id="finance-trend-view"><option value="daily">Daily · last 14 days</option><option value="weekly">Weekly · last 12 weeks</option><option value="monthly">Monthly · last 12 months</option></select></label></div><div class="finance-summary" id="finance-summary"></div><div class="finance-chart"><div class="customer-toolbar"><h3 id="finance-chart-title">Daily trend</h3><span class="muted" id="finance-range"></span></div><div id="finance-chart-content" class="muted">Loading finance records…</div><div class="finance-legend"><span><i style="background:#0e847e"></i>Earnings</span><span><i style="background:#e69d35"></i>Expenditure</span><span><i style="background:#4560a6"></i>Profit</span></div></div><h3 style="margin:24px 0 8px">Add a finance entry</h3><p class="muted">Profit is calculated as earnings minus expenditure.</p><form id="finance-form" class="finance-form"><label>Entry type<select name="kind" required><option value="income">Earnings</option><option value="expense">Expenditure</option></select></label><label>Amount (KSh)<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label><label>Date<input name="entry_date" type="date" required></label><label>Description<input name="description" maxlength="200" required placeholder="e.g. Laundry orders or detergent purchase"></label><div class="full"><button type="submit">Save entry</button></div><p class="muted full" id="finance-message" role="status" style="margin:0"></p></form><h3 style="margin:24px 0 8px">Recent entries</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead><tbody id="finance-entries"></tbody></table><p class="muted customer-empty hidden" id="finance-empty">No finance entries in this period yet.</p></div></section>`);
+    $('app').insertAdjacentHTML('beforeend', `<section id="finance-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Revenue dashboard</h2><p class="muted">Compare earnings, expenditure, and profit across five reporting periods.</p></div><button id="refresh-finance" type="button">Refresh dashboard</button></div><h3 style="margin:18px 0 8px">Cumulative totals · all recorded entries</h3><div class="finance-summary cumulative" id="finance-cumulative"><p class="muted">Loading all-time totals…</p></div><div class="finance-controls"><label>Dashboard date<input id="finance-as-of" type="date"></label><label>Trend view<select id="finance-trend-view"><option value="daily">Daily · last 14 days</option><option value="weekly">Weekly · last 12 weeks</option><option value="monthly">Monthly · last 12 months</option><option value="90day">90 day · daily</option><option value="yearly">Yearly · monthly</option></select></label></div><div class="finance-summary" id="finance-summary"></div><div class="finance-chart"><div class="customer-toolbar"><h3 id="finance-chart-title">Daily trend</h3><span class="muted" id="finance-range"></span></div><div id="finance-chart-content" class="muted">Loading finance records…</div><div class="finance-legend"><span><i style="background:#0e847e"></i>Earnings</span><span><i style="background:#e69d35"></i>Expenditure</span><span><i style="background:#4560a6"></i>Profit</span></div></div><h3 id="finance-form-title" style="margin:24px 0 8px">Add a finance entry</h3><p class="muted">Profit is calculated as earnings minus expenditure.</p><form id="finance-form" class="finance-form"><input type="hidden" name="id"><label>Entry type<select name="kind" required><option value="income">Earnings</option><option value="expense">Expenditure</option></select></label><label>Amount (KSh)<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label><label>Date<input name="entry_date" type="date" required></label><label>Description<input name="description" maxlength="200" required placeholder="e.g. Laundry orders or detergent purchase"></label><div class="full" style="display:flex;gap:8px;flex-wrap:wrap"><button id="finance-submit" type="submit">Save entry</button><button id="finance-cancel" class="finance-cancel hidden" type="button">Cancel edit</button></div><p class="muted full" id="finance-message" role="status" style="margin:0"></p></form><h3 style="margin:24px 0 8px">Recent entries</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead><tbody id="finance-entries"></tbody></table><p class="muted customer-empty hidden" id="finance-empty">No finance entries in this period yet.</p></div></section>`);
 
     const today = new Date();
     const dateString = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -163,10 +163,14 @@
       const dayStart = dateString(selected);
       const weekStart = dateString(startOfWeek(selected));
       const monthStart = dateString(new Date(selected.getFullYear(), selected.getMonth(), 1));
+      const rolling90Start = dateString(addDays(selected, -89));
+      const yearStart = `${selected.getFullYear()}-01-01`;
       const periods = [
-        { title: 'Selected day', start: dayStart, end: dayStart },
-        { title: 'Selected week', start: weekStart, end: dayStart },
-        { title: 'Selected month', start: monthStart, end: dayStart },
+        { title: 'Daily performance', start: dayStart, end: dayStart },
+        { title: 'Weekly performance', start: weekStart, end: dayStart },
+        { title: 'Monthly performance', start: monthStart, end: dayStart },
+        { title: '90 day performance', start: rolling90Start, end: dayStart },
+        { title: 'Yearly performance', start: yearStart, end: dayStart },
       ];
       $('finance-summary').innerHTML = periods.map(period => {
         const total = sumPeriod(financeRows, period.start, period.end);
@@ -184,15 +188,19 @@
         const selectedWeek = startOfWeek(selected);
         const first = addDays(selectedWeek, -77);
         buckets = Array.from({ length: 12 }, (_, index) => { const date = addDays(first, index * 7); const key = dateString(date); return { key, label: shortDate(date), fullLabel: `Week of ${date.toLocaleDateString('en-KE')}`, income: 0, expense: 0 }; });
+      } else if (view === '90day') {
+        const first = addDays(selected, -89);
+        buckets = Array.from({ length: 90 }, (_, index) => { const date = addDays(first, index); const key = dateString(date); return { key, label: index % 15 === 0 || index === 89 ? shortDate(date) : '', fullLabel: date.toLocaleDateString('en-KE'), income: 0, expense: 0 }; });
       } else {
-        const first = new Date(selected.getFullYear(), selected.getMonth() - 11, 1);
-        buckets = Array.from({ length: 12 }, (_, index) => { const date = new Date(first.getFullYear(), first.getMonth() + index, 1); const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}`; return { key, label: date.toLocaleDateString('en-KE', { month: 'short', year: '2-digit' }), fullLabel: date.toLocaleDateString('en-KE', { month: 'long', year: 'numeric' }), income: 0, expense: 0 }; });
+        const first = view === 'yearly' ? new Date(selected.getFullYear(), 0, 1) : new Date(selected.getFullYear(), selected.getMonth() - 11, 1);
+        const length = view === 'yearly' ? selected.getMonth() + 1 : 12;
+        buckets = Array.from({ length }, (_, index) => { const date = new Date(first.getFullYear(), first.getMonth() + index, 1); const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}`; return { key, label: date.toLocaleDateString('en-KE', { month: 'short', year: '2-digit' }), fullLabel: date.toLocaleDateString('en-KE', { month: 'long', year: 'numeric' }), income: 0, expense: 0 }; });
       }
       const byKey = new Map(buckets.map(bucket => [bucket.key, bucket]));
       financeRows.forEach(row => {
         let key = row.entry_date;
         if (view === 'weekly') key = dateString(startOfWeek(fromDateString(row.entry_date)));
-        if (view === 'monthly') key = row.entry_date.slice(0, 7);
+        if (view === 'monthly' || view === 'yearly') key = row.entry_date.slice(0, 7);
         const bucket = byKey.get(key);
         if (bucket) bucket[row.kind] += Number(row.amount) || 0;
       });
@@ -200,10 +208,10 @@
     };
     const renderChart = (asOf, view) => {
       const rows = buildBuckets(asOf, view);
-      const title = view === 'daily' ? 'Daily trend · last 14 days' : view === 'weekly' ? 'Weekly trend · last 12 weeks' : 'Monthly trend · last 12 months';
+      const title = view === 'daily' ? 'Daily trend · last 14 days' : view === 'weekly' ? 'Weekly trend · last 12 weeks' : view === '90day' ? '90 day trend · daily' : view === 'yearly' ? 'Yearly trend · year to date' : 'Monthly trend · last 12 months';
       $('finance-chart-title').textContent = title;
       const selected = fromDateString(asOf);
-      const chartStart = view === 'daily' ? dateString(addDays(selected, -13)) : view === 'weekly' ? dateString(addDays(startOfWeek(selected), -77)) : dateString(new Date(selected.getFullYear(), selected.getMonth() - 11, 1));
+      const chartStart = view === 'daily' ? dateString(addDays(selected, -13)) : view === 'weekly' ? dateString(addDays(startOfWeek(selected), -77)) : view === '90day' ? dateString(addDays(selected, -89)) : view === 'yearly' ? `${selected.getFullYear()}-01-01` : dateString(new Date(selected.getFullYear(), selected.getMonth() - 11, 1));
       $('finance-range').textContent = `${shortDate(fromDateString(chartStart))} – ${selected.toLocaleDateString('en-KE')}`;
       const width = 900, height = 310, left = 82, right = 18, top = 22, bottom = 52;
       const plotWidth = width - left - right, plotHeight = height - top - bottom;
@@ -221,8 +229,23 @@
     };
     const renderEntries = () => {
       const visible = [...financeRows].sort((a,b) => b.entry_date.localeCompare(a.entry_date) || b.created_at.localeCompare(a.created_at)).slice(0, 40);
-      $('finance-entries').innerHTML = visible.map(row => `<tr><td>${safe(fromDateString(row.entry_date).toLocaleDateString('en-KE'))}</td><td>${row.kind === 'income' ? 'Earnings' : 'Expenditure'}</td><td>${safe(row.description)}</td><td>${money(Number(row.amount))}</td><td><button type="button" class="finance-delete danger" data-id="${safe(row.id)}">Delete</button></td></tr>`).join('');
+      $('finance-entries').innerHTML = visible.map(row => `<tr><td>${safe(fromDateString(row.entry_date).toLocaleDateString('en-KE'))}</td><td>${row.kind === 'income' ? 'Earnings' : 'Expenditure'}</td><td>${safe(row.description)}</td><td>${money(Number(row.amount))}</td><td><div class="finance-entry-actions"><button type="button" class="finance-edit" data-id="${safe(row.id)}">Edit</button><button type="button" class="finance-delete danger" data-id="${safe(row.id)}">Delete</button></div></td></tr>`).join('');
       $('finance-empty').classList.toggle('hidden', visible.length > 0);
+      document.querySelectorAll('.finance-edit').forEach(button => button.addEventListener('click', () => {
+        const row = financeRows.find(entry => entry.id === button.dataset.id);
+        if (!row) return;
+        form.elements.id.value = row.id;
+        form.elements.entry_date.value = row.entry_date;
+        form.elements.kind.value = row.kind;
+        form.elements.description.value = row.description;
+        form.elements.amount.value = Number(row.amount).toFixed(2);
+        $('finance-form-title').textContent = 'Edit finance entry';
+        $('finance-submit').textContent = 'Save changes';
+        $('finance-cancel').classList.remove('hidden');
+        $('finance-message').textContent = `Editing entry from ${fromDateString(row.entry_date).toLocaleDateString('en-KE')}.`;
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        form.elements.amount.focus({ preventScroll: true });
+      }));
       document.querySelectorAll('.finance-delete').forEach(button => button.addEventListener('click', async () => {
         if (!confirm('Delete this finance entry?')) return;
         const { error } = await db.from('finance_entries').delete().eq('id', button.dataset.id);
@@ -235,7 +258,7 @@
       const cumulativeRequest = loadCumulativeTotals();
       const asOf = dateInput.value || dateString(new Date());
       const selected = fromDateString(asOf);
-      const from = new Date(selected.getFullYear(), selected.getMonth() - 11, 1);
+      const from = new Date(Math.min(new Date(selected.getFullYear(), 0, 1).getTime(), addDays(selected, -89).getTime()));
       const fromString = dateString(from);
       financeRows = [];
       for (let offset = 0; ; offset += 1000) {
@@ -252,6 +275,15 @@
     dateInput.addEventListener('change', loadFinance);
     $('finance-trend-view').addEventListener('change', () => renderChart(dateInput.value, $('finance-trend-view').value));
     $('refresh-finance').addEventListener('click', loadFinance);
+    function resetFinanceForm() {
+      form.reset();
+      form.elements.id.value = '';
+      form.elements.entry_date.value = dateString(new Date());
+      $('finance-form-title').textContent = 'Add a finance entry';
+      $('finance-submit').textContent = 'Save entry';
+      $('finance-cancel').classList.add('hidden');
+    }
+    $('finance-cancel').addEventListener('click', () => { resetFinanceForm(); $('finance-message').textContent = 'Edit cancelled.'; });
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (!form.reportValidity()) return;
@@ -259,17 +291,14 @@
       const { data: { user } } = await db.auth.getUser();
       const amount = Number(values.get('amount'));
       if (!Number.isFinite(amount) || amount <= 0) return $('finance-message').textContent = 'Enter an amount greater than zero.';
-      const { error } = await db.from('finance_entries').insert({
-        entry_date: values.get('entry_date'),
-        kind: values.get('kind'),
-        description: String(values.get('description')).trim(),
-        amount,
-        created_by: user?.id,
-      });
+      const entry = { entry_date: values.get('entry_date'), kind: values.get('kind'), description: String(values.get('description')).trim(), amount };
+      const id = String(values.get('id') || '');
+      const result = id ? await db.from('finance_entries').update(entry).eq('id', id) : await db.from('finance_entries').insert({ ...entry, created_by: user?.id });
+      const { error } = result;
       if (error) return $('finance-message').textContent = error.message;
-      $('finance-message').textContent = 'Finance entry saved.';
       const savedDate = values.get('entry_date');
-      form.reset();
+      $('finance-message').textContent = id ? 'Finance entry updated.' : 'Finance entry saved.';
+      resetFinanceForm();
       form.elements.entry_date.value = savedDate;
       form.elements.kind.value = 'income';
       dateInput.value = savedDate;
