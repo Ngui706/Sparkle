@@ -187,7 +187,7 @@
   }
 
   function mountFinanceTools() {
-    $('app').insertAdjacentHTML('beforeend', `<section id="finance-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Revenue dashboard</h2><p class="muted">Compare earnings, expenditure, and profit across five reporting periods.</p></div><button id="refresh-finance" type="button">Refresh dashboard</button></div><h3 style="margin:18px 0 8px">Cumulative totals · all recorded entries</h3><div class="finance-summary cumulative" id="finance-cumulative"><p class="muted">Loading all-time totals…</p></div><div class="finance-controls"><label>Choose a month<select id="finance-month-select" aria-label="Select a month to view"></select></label><label>Trend view<select id="finance-trend-view"><option value="today">Today</option><option value="7day">Last 7 days</option><option value="30day">Last 30 days</option><option value="90day">Last 3 months</option><option value="12month">Last 12 months</option><option value="selected-month">Selected calendar month</option></select></label></div><div class="finance-summary" id="finance-summary"></div><h3 style="margin:20px 0 8px">Selected month</h3><div class="finance-summary" id="finance-month-summary"></div><div class="finance-chart"><div class="customer-toolbar"><h3 id="finance-chart-title">Daily trend</h3><span class="muted" id="finance-range"></span></div><div id="finance-chart-content" class="muted">Loading finance records…</div><div class="finance-legend"><span><i style="background:#0e847e"></i>Earnings</span><span><i style="background:#e69d35"></i>Expenditure</span><span><i style="background:#4560a6"></i>Profit</span></div></div><h3 id="finance-form-title" style="margin:24px 0 8px">Add a finance entry</h3><p class="muted">Profit is calculated as earnings minus expenditure.</p><form id="finance-form" class="finance-form"><input type="hidden" name="id"><label>Entry type<select name="kind" required><option value="income">Earnings</option><option value="expense">Expenditure</option></select></label><label>Amount (KSh)<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label><label>Date<input name="entry_date" type="date" required></label><label>Description<input name="description" maxlength="200" required placeholder="e.g. Laundry orders or detergent purchase"></label><div class="full" style="display:flex;gap:8px;flex-wrap:wrap"><button id="finance-submit" type="submit">Save entry</button><button id="finance-cancel" class="finance-cancel hidden" type="button">Cancel edit</button></div><p class="muted full" id="finance-message" role="status" style="margin:0"></p></form><h3 style="margin:24px 0 8px">Recent entries</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead><tbody id="finance-entries"></tbody></table><p class="muted customer-empty hidden" id="finance-empty">No finance entries in this period yet.</p></div></section>`);
+    $('app').insertAdjacentHTML('beforeend', `<section id="finance-tools" class="card customer-card"><div class="customer-toolbar"><div><h2>Revenue dashboard</h2><p class="muted">Compare earnings, expenditure, and profit across five reporting periods.</p></div><button id="refresh-finance" type="button">Refresh dashboard</button></div><h3 style="margin:18px 0 8px">Cumulative totals · all recorded entries</h3><div class="finance-summary cumulative" id="finance-cumulative"><p class="muted">Loading all-time totals…</p></div><div class="finance-controls"><label>Pick a date<input id="finance-selected-date" type="date" aria-label="Pick a date to view daily performance"></label><label>Choose a month<select id="finance-month-select" aria-label="Select a month to view"></select></label><label>Trend view<select id="finance-trend-view"><option value="today">Today</option><option value="7day">Last 7 days</option><option value="30day">Last 30 days</option><option value="90day">Last 3 months</option><option value="12month">Last 12 months</option><option value="selected-month">Selected calendar month</option><option value="selected-day">Selected calendar day</option></select></label></div><div class="finance-summary" id="finance-summary"></div><h3 style="margin:20px 0 8px">Selected day</h3><div class="finance-summary" id="finance-day-summary"></div><h3 style="margin:20px 0 8px">Selected month</h3><div class="finance-summary" id="finance-month-summary"></div><div class="finance-chart"><div class="customer-toolbar"><h3 id="finance-chart-title">Daily trend</h3><span class="muted" id="finance-range"></span></div><div id="finance-chart-content" class="muted">Loading finance records…</div><div class="finance-legend"><span><i style="background:#0e847e"></i>Earnings</span><span><i style="background:#e69d35"></i>Expenditure</span><span><i style="background:#4560a6"></i>Profit</span></div></div><h3 id="finance-form-title" style="margin:24px 0 8px">Add a finance entry</h3><p class="muted">Profit is calculated as earnings minus expenditure.</p><form id="finance-form" class="finance-form"><input type="hidden" name="id"><label>Entry type<select name="kind" required><option value="income">Earnings</option><option value="expense">Expenditure</option></select></label><label>Amount (KSh)<input name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></label><label>Date<input name="entry_date" type="date" required></label><label>Description<input name="description" maxlength="200" required placeholder="e.g. Laundry orders or detergent purchase"></label><div class="full" style="display:flex;gap:8px;flex-wrap:wrap"><button id="finance-submit" type="submit">Save entry</button><button id="finance-cancel" class="finance-cancel hidden" type="button">Cancel edit</button></div><p class="muted full" id="finance-message" role="status" style="margin:0"></p></form><h3 style="margin:24px 0 8px">Recent entries</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead><tbody id="finance-entries"></tbody></table><p class="muted customer-empty hidden" id="finance-empty">No finance entries in this period yet.</p></div></section>`);
 
     const today = new Date();
     const dateString = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -198,18 +198,28 @@
     const shortDate = date => date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
     const form = $('finance-form');
     const monthInput = $('finance-month-select');
+    const selectedDateInput = $('finance-selected-date');
     const monthString = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}`;
     const monthEnd = value => { const [year, month] = value.split('-').map(Number); return new Date(year, month, 0); };
+    const ensureMonthOption = value => {
+      if (![...monthInput.options].some(option => option.value === value)) {
+        const [year, month] = value.split('-').map(Number);
+        monthInput.add(new Option(new Date(year, month - 1, 1).toLocaleDateString('en-KE', { month: 'long', year: 'numeric' }), value));
+      }
+      monthInput.value = value;
+    };
     const currentMonth = monthString(today);
     monthInput.innerHTML = `<option value="${currentMonth}">${today.toLocaleDateString('en-KE', { month: 'long', year: 'numeric' })}</option>`;
     monthInput.value = currentMonth;
+    selectedDateInput.value = dateString(today);
+    selectedDateInput.max = dateString(today);
     form.elements.entry_date.value = dateString(today);
     let financeRows = [];
 
     async function loadCumulativeTotals() {
       const totals = { income: 0, expense: 0 };
       const recordedDates = new Set();
-      const recordedMonths = new Set([monthString(today)]);
+      const recordedMonths = new Set([monthString(today), selectedDateInput.value?.slice(0, 7)].filter(Boolean));
       for (let monthOffset = 1; monthOffset < 36; monthOffset++) recordedMonths.add(monthString(new Date(today.getFullYear(), today.getMonth() - monthOffset, 1)));
       for (let offset = 0; ; offset += 1000) {
         const { data, error } = await db.from('finance_entries').select('entry_date,kind,amount').order('created_at', { ascending: true }).range(offset, offset + 999);
@@ -245,6 +255,11 @@
         const profit = total.income - total.expense;
         return `<article class="finance-period"><h3>${period.title}</h3><div class="finance-metrics"><div class="finance-metric"><small>Earnings</small><b>${money(total.income)}</b></div><div class="finance-metric"><small>Expenditure</small><b>${money(total.expense)}</b></div><div class="finance-metric"><small>Profit</small><b class="${profit < 0 ? 'finance-profit-negative' : 'finance-profit-positive'}">${money(profit)}</b></div></div></article>`;
       }).join('');
+      const selectedDay = selectedDateInput.value || todayString;
+      const selectedDayTotal = sumPeriod(financeRows, selectedDay, selectedDay);
+      const selectedDayProfit = selectedDayTotal.income - selectedDayTotal.expense;
+      const selectedDateLabel = fromDateString(selectedDay).toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      $('finance-day-summary').innerHTML = `<article class="finance-period"><h3>${selectedDateLabel}</h3><div class="finance-metrics"><div class="finance-metric"><small>Earnings</small><b>${money(selectedDayTotal.income)}</b></div><div class="finance-metric"><small>Expenditure</small><b>${money(selectedDayTotal.expense)}</b></div><div class="finance-metric"><small>Profit</small><b class="${selectedDayProfit < 0 ? 'finance-profit-negative' : 'finance-profit-positive'}">${money(selectedDayProfit)}</b></div></div></article>`;
       const monthStart = `${monthInput.value}-01`;
       const lastDay = monthEnd(monthInput.value);
       const monthEndDate = monthInput.value === monthString(today) && today < lastDay ? today : lastDay;
@@ -259,7 +274,11 @@
       let buckets = [];
       const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
       const todayString = dateString(todayDate);
-      if (view === 'today') {
+      if (view === 'selected-day') {
+        const date = fromDateString(selectedDateInput.value || todayString);
+        const key = dateString(date);
+        buckets = [{ key, label: shortDate(date), fullLabel: date.toLocaleDateString('en-KE'), income: 0, expense: 0 }];
+      } else if (view === 'today') {
         buckets = [{ key: todayString, label: 'Today', fullLabel: todayDate.toLocaleDateString('en-KE'), income: 0, expense: 0 }];
       } else if (view === '7day' || view === '30day' || view === '90day' || view === 'selected-month') {
         let first;
@@ -292,12 +311,13 @@
     };
     const renderChart = view => {
       const rows = buildBuckets(view);
-      const titles = { today: 'Today', '7day': 'Last 7 days', '30day': 'Last 30 days', '90day': 'Last 3 months', '12month': 'Last 12 months', 'selected-month': 'Selected calendar month' };
+      const titles = { today: 'Today', '7day': 'Last 7 days', '30day': 'Last 30 days', '90day': 'Last 3 months', '12month': 'Last 12 months', 'selected-month': 'Selected calendar month', 'selected-day': 'Selected calendar day' };
       const title = `${titles[view]} · earnings, expenditure and profit`;
       $('finance-chart-title').textContent = title;
       const rangeStart = rows.length ? rows[0].fullLabel : '';
       const rangeEnd = rows.length ? rows[rows.length - 1].fullLabel : '';
-      $('finance-range').textContent = rangeStart === rangeEnd ? rangeEnd : `${rangeStart} – ${rangeEnd}`;
+      if (view === 'selected-day') $('finance-range').textContent = rangeStart;
+      else $('finance-range').textContent = rangeStart === rangeEnd ? rangeEnd : `${rangeStart} – ${rangeEnd}`;
       const width = 900, height = 310, left = 82, right = 18, top = 22, bottom = 52;
       const plotWidth = width - left - right, plotHeight = height - top - bottom;
       const values = rows.flatMap(row => [row.income, row.expense, row.profit]);
@@ -342,8 +362,9 @@
     async function loadFinance() {
       const cumulativeRequest = loadCumulativeTotals();
       const selectedMonthStart = new Date(`${monthInput.value}-01T00:00:00`);
+      const selectedDayStart = fromDateString(selectedDateInput.value || dateString(today));
       const rollingYearStart = new Date(today.getFullYear(), today.getMonth() - 11, 1);
-      const from = new Date(Math.min(selectedMonthStart.getTime(), rollingYearStart.getTime()));
+      const from = new Date(Math.min(selectedMonthStart.getTime(), selectedDayStart.getTime(), rollingYearStart.getTime()));
       const fromString = dateString(from);
       const todayString = dateString(today);
       financeRows = [];
@@ -358,6 +379,14 @@
       renderEntries();
       await cumulativeRequest;
     }
+    selectedDateInput.addEventListener('change', async () => {
+      if (!selectedDateInput.value) return;
+      if (selectedDateInput.value > dateString(today)) selectedDateInput.value = dateString(today);
+      ensureMonthOption(selectedDateInput.value.slice(0, 7));
+      await loadFinance();
+      $('finance-trend-view').value = 'selected-day';
+      renderChart('selected-day');
+    });
     monthInput.addEventListener('change', async () => { await loadFinance(); if ($('finance-trend-view').value !== 'selected-month') { $('finance-trend-view').value = 'selected-month'; renderChart('selected-month'); } });
     $('finance-trend-view').addEventListener('change', () => renderChart($('finance-trend-view').value));
     $('refresh-finance').addEventListener('click', loadFinance);
@@ -387,7 +416,8 @@
       resetFinanceForm();
       form.elements.entry_date.value = savedDate;
       form.elements.kind.value = 'income';
-      monthInput.value = savedDate.slice(0, 7);
+      ensureMonthOption(savedDate.slice(0, 7));
+      selectedDateInput.value = savedDate;
       await loadFinance();
       if ($('finance-trend-view').value === 'selected-month') renderChart('selected-month');
     });
