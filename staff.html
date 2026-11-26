@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sparkle Laundry | Staff portal</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{margin:0;background:#f5faf7;color:#123232;font:15px Arial,sans-serif}.wrap{width:min(1100px,calc(100% - 32px));margin:auto}.bar{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.brand{font-size:20px;font-weight:800}.card{background:white;border:1px solid #dce9e4;border-radius:14px;padding:22px;box-shadow:0 12px 30px #12323212}h1{font-size:30px}h2{margin-top:0}input,button,select{padding:12px;border:1px solid #cfe1db;border-radius:8px;font:inherit}button{background:#0e847e;color:white;border:0;cursor:pointer;font-weight:700}.login{max-width:420px;margin:12vh auto}.login form{display:grid;gap:12px}.hidden{display:none}.full{grid-column:1/-1}.toolbar{display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap}.filters{display:flex;gap:10px;align-items:center}.table-wrap{overflow:auto;margin-top:20px}table{width:100%;border-collapse:collapse;min-width:800px}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid #e4efeb;vertical-align:top}th{font-size:12px;text-transform:uppercase;color:#607473}.status{border-radius:20px;padding:5px 9px;background:#e6f5ef;font-size:12px;font-weight:700}.muted{color:#607473}.error{color:#a32929}.success{color:#0e847e}@media(max-width:700px){.wrap{width:min(100% - 24px,1100px)}.bar{padding:16px 0}.brand{font-size:17px}.card{padding:16px}.toolbar{align-items:stretch}.toolbar h1{margin-bottom:5px;font-size:25px}.filters{width:100%;display:grid;grid-template-columns:1fr 1fr}.filters select,.filters button{width:100%}#ad-form{grid-template-columns:1fr!important}#admin-tools h2{font-size:22px}table{min-width:720px}}@media(max-width:420px){.login{margin:7vh auto}.filters{grid-template-columns:1fr}.brand .muted{display:block;font-size:12px}.table-wrap{margin-left:-4px;margin-right:-4px}button,input,select{font-size:14px}}
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sparkle Laundry | Staff portal</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{margin:0;background:#f5faf7;color:#123232;font:15px Arial,sans-serif}a{text-decoration:none}.wrap{width:min(1100px,calc(100% - 32px));margin:auto}.bar{display:flex;justify-content:space-between;align-items:center;padding:22px 0}.brand{font-size:20px;font-weight:800}.card{background:white;border:1px solid #dce9e4;border-radius:14px;padding:22px;box-shadow:0 12px 30px #12323212}h1{font-size:30px}h2{margin-top:0}input,button,select{padding:12px;border:1px solid #cfe1db;border-radius:8px;font:inherit}button{background:#0e847e;color:white;border:0;cursor:pointer;font-weight:700}.login{max-width:420px;margin:12vh auto}.login form{display:grid;gap:12px}.hidden{display:none}.full{grid-column:1/-1}.toolbar{display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap}.filters{display:flex;gap:10px;align-items:center}.table-wrap{overflow:auto;margin-top:20px}table{width:100%;border-collapse:collapse;min-width:800px}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid #e4efeb;vertical-align:top}th{font-size:12px;text-transform:uppercase;color:#607473}.status{border-radius:20px;padding:5px 9px;background:#e6f5ef;font-size:12px;font-weight:700}.muted{color:#607473}.error{color:#a32929}.success{color:#0e847e}@media(max-width:700px){.wrap{width:min(100% - 24px,1100px)}.bar{padding:16px 0}.brand{font-size:17px}.card{padding:16px}.toolbar{align-items:stretch}.toolbar h1{margin-bottom:5px;font-size:25px}.filters{width:100%;display:grid;grid-template-columns:1fr 1fr}.filters select,.filters button{width:100%}#ad-form{grid-template-columns:1fr!important}#admin-tools h2{font-size:22px}table{min-width:720px}}@media(max-width:420px){.login{margin:7vh auto}.filters{grid-template-columns:1fr}.brand .muted{display:block;font-size:12px}.table-wrap{margin-left:-4px;margin-right:-4px}button,input,select{font-size:14px}}
 
 .laundry-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(135deg,#f5faf7 0%,#e9f7f1 52%,#fffaf0 100%)}
-.staff-nav{position:sticky;top:0;z-index:20;display:flex;gap:7px;overflow-x:auto;margin:0 0 18px;padding:10px;border:1px solid #dce9e4;border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 8px 22px #12323212;scrollbar-width:thin;scrollbar-color:#9bcfc1 transparent}.staff-nav a{flex:0 0 auto;padding:9px 12px;border-radius:8px;color:#486562;font-size:13px;font-weight:700;white-space:nowrap}.staff-nav a:hover,.staff-nav a:focus-visible,.staff-nav a.active{background:#e6f5ef;color:#0e847e;outline:none}#bookings-section,#admin-tools,#customer-tools,#customer-directory,#promotion-tools,#finance-tools,#review-tools{scroll-margin-top:82px}
+.staff-nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;margin:0 0 18px;padding:10px;border:1px solid #dce9e4;border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 8px 22px #12323212}.staff-nav-links{display:flex;gap:7px;min-width:0}.staff-nav a{flex:0 0 auto;padding:9px 12px;border-radius:8px;color:#486562;font-size:13px;font-weight:700;white-space:nowrap;text-decoration:none}.staff-nav a:hover,.staff-nav a:focus-visible,.staff-nav a.active{background:#e6f5ef;color:#0e847e;outline:none;text-decoration:none}.staff-nav-toggle{display:none;width:42px;height:42px;flex:0 0 42px;align-content:center;justify-items:center;gap:4px;margin-left:auto;padding:8px;background:#e6f5ef;color:#0e847e}.staff-nav-toggle span{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;transition:transform .2s ease,opacity .2s ease}.staff-nav.open .staff-nav-toggle span:first-child{transform:translateY(6px) rotate(45deg)}.staff-nav.open .staff-nav-toggle span:nth-child(2){opacity:0}.staff-nav.open .staff-nav-toggle span:last-child{transform:translateY(-6px) rotate(-45deg)}#bookings-section,#admin-tools,#customer-tools,#customer-directory,#promotion-tools,#finance-tools,#review-tools{scroll-margin-top:82px}
 .wrap{position:relative;z-index:1}
 .laundry-bg:before,.laundry-bg:after{content:"";position:absolute;left:-10%;width:120%;height:90px;border-radius:50%;border:2px solid rgba(14,132,126,.12);animation:waveDrift 12s ease-in-out infinite alternate}
 .laundry-bg:before{bottom:-40px;box-shadow:0 -16px 0 rgba(245,200,75,.11),0 -32px 0 rgba(14,132,126,.08)}
@@ -16,6 +16,7 @@
 @keyframes floatFabric{0%,100%{margin-top:0;rotate:0deg}50%{margin-top:28px;rotate:8deg}}
 @keyframes waveDrift{0%{transform:translateX(-3%) rotate(-1deg)}100%{transform:translateX(3%) rotate(1deg)}}
 @media(prefers-reduced-motion:reduce){.laundry-bg *,.laundry-bg:before,.laundry-bg:after{animation:none!important}.laundry-bg:before{bottom:-40px}}
+@media(max-width:700px){.staff-nav{display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:8px;padding:8px}.staff-nav-toggle{display:grid;grid-column:2;grid-row:1}.staff-nav-links{grid-column:1/-1;grid-row:2;display:none;flex-direction:column;gap:3px;width:100%;padding-top:5px}.staff-nav.open .staff-nav-links{display:flex}.staff-nav a{display:block;width:100%;box-sizing:border-box;padding:11px 12px}.bar{gap:10px}.bar #logout{flex:0 0 auto}.customer-toolbar{align-items:stretch}.customer-toolbar>button{width:100%}.finance-chart .customer-toolbar{align-items:flex-start}#finance-range{overflow-wrap:anywhere}}
 .customer-card{margin-top:24px}.customer-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.customer-toolbar h2{margin-bottom:5px}.customer-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin:18px 0 0;padding:0;background:transparent;box-shadow:none}.customer-form input{min-width:0}.customer-form button{white-space:nowrap}.customer-actions{display:flex;gap:7px;flex-wrap:wrap}.customer-actions button{padding:8px 10px;font-size:12px}.danger{background:#a32929}.customer-empty{text-align:center;padding:25px!important}.directory-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto auto;gap:10px;align-items:end;margin:18px 0;padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.directory-form label{display:grid;gap:5px;color:#607473;font-size:13px;font-weight:700}.directory-form input,.directory-form select{width:100%;min-width:0;box-sizing:border-box}.directory-actions{display:flex;gap:7px;flex-wrap:wrap}.directory-actions button{padding:8px 10px;font-size:12px}.customer-tier{display:inline-block;padding:4px 9px;border-radius:20px;background:#e6f5ef;color:#0e847e;font-size:12px;font-weight:700}@media(max-width:700px){.customer-form{grid-template-columns:1fr}.customer-form button{width:100%}.directory-form{grid-template-columns:1fr}.directory-form button{width:100%}}
 .finance-controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap;margin:18px 0}.finance-controls label,.finance-form label{display:grid;gap:5px;color:#607473;font-size:13px;font-weight:700}.finance-controls input,.finance-controls select{min-width:180px}.finance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}#finance-summary{grid-template-columns:repeat(5,minmax(0,1fr))}#finance-month-summary{grid-template-columns:1fr}#finance-summary .finance-metrics{grid-template-columns:1fr;gap:3px}#finance-summary .finance-metric{display:flex;justify-content:space-between;align-items:baseline;gap:8px}#finance-summary .finance-metric small{font-size:10px}#finance-summary .finance-metric b{font-size:13px;margin-top:0}.finance-summary.cumulative{grid-template-columns:repeat(4,minmax(0,1fr))}.finance-period{padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-period h3{margin:0 0 8px;color:#0e847e}.finance-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.finance-metric small{display:block;color:#607473;font-size:11px}.finance-metric b{display:block;margin-top:3px;font-size:15px}.finance-chart{margin-top:20px;padding:14px;border:1px solid #dce9e4;border-radius:12px;background:#fff;overflow:hidden}.finance-chart svg{display:block;width:100%;height:auto;min-height:260px}.finance-legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;color:#607473;font-size:12px}.finance-legend span{display:flex;align-items:center;gap:6px}.finance-legend i{width:12px;height:3px;border-radius:3px;background:#dce9e4}.finance-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding:16px;border:1px solid #dce9e4;border-radius:12px;background:#fbfffd}.finance-form input,.finance-form select{width:100%;box-sizing:border-box}.finance-entry-actions{display:flex;gap:8px;flex-wrap:wrap}.finance-entry-actions button{padding:7px 10px;font-size:12px}.finance-edit{background:#4560a6}.finance-cancel{background:#607473}.finance-profit-positive{color:#0e847e}.finance-profit-negative{color:#a32929}@media(max-width:1000px){#finance-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:900px){.finance-summary.cumulative{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.finance-summary{grid-template-columns:1fr}#finance-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-form{grid-template-columns:1fr}.finance-controls{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.finance-controls label,.finance-controls input,.finance-controls select{min-width:0;width:100%;box-sizing:border-box}.finance-chart{padding:6px}.finance-chart svg{min-height:220px}.finance-entry-actions{min-width:112px}}@media(max-width:460px){#finance-summary,.finance-summary.cumulative,.finance-controls{grid-template-columns:1fr}.finance-period{padding:13px}.finance-controls{gap:10px}.customer-toolbar>#refresh-finance{width:100%}}
 </style></head>
@@ -80,7 +81,17 @@
     const nav = document.createElement('nav');
     nav.className = 'staff-nav';
     nav.setAttribute('aria-label', 'Staff portal sections');
-    const links = [
+    const toggle = document.createElement('button');
+    toggle.className = 'staff-nav-toggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-label', 'Open staff navigation');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'staff-nav-links');
+    toggle.innerHTML = '<span></span><span></span><span></span>';
+    const links = document.createElement('div');
+    links.className = 'staff-nav-links';
+    links.id = 'staff-nav-links';
+    [
       ['bookings-section', 'Bookings'],
       ['customer-tools', 'Customer accounts'],
       ['customer-directory', 'Customer directory'],
@@ -88,19 +99,35 @@
       ['finance-tools', 'Finance'],
       ['admin-tools', 'Homepage ads'],
       ['review-tools', 'Reviews'],
-    ];
-    links.forEach(([target, label], index) => {
+    ].forEach(([target, label], index) => {
       const link = document.createElement('a');
       link.href = `#${target}`;
       link.textContent = label;
       if (index === 0) { link.classList.add('active'); link.setAttribute('aria-current', 'location'); }
       link.addEventListener('click', () => {
-        nav.querySelectorAll('a').forEach(item => { item.classList.remove('active'); item.removeAttribute('aria-current'); });
+        links.querySelectorAll('a').forEach(item => { item.classList.remove('active'); item.removeAttribute('aria-current'); });
         link.classList.add('active');
         link.setAttribute('aria-current', 'location');
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open staff navigation');
       });
-      nav.appendChild(link);
+      links.appendChild(link);
     });
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close staff navigation' : 'Open staff navigation');
+    });
+    nav.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open staff navigation');
+        toggle.focus();
+      }
+    });
+    nav.append(toggle, links);
     $('app').prepend(nav);
   }
 
