@@ -7,6 +7,7 @@ supabase/migrations/*
 !supabase/migrations/202610200003_promotion_popups.sql
 !supabase/migrations/202610270001_finance_dashboard.sql
 !supabase/migrations/202611220001_customer_directory.sql
+!supabase/migrations/202611260001_customer_directory_balances.sql
 !supabase/functions/
 supabase/functions/*
 !supabase/functions/sparkle-staff-email/
